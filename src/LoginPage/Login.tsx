@@ -1,5 +1,5 @@
 import React from "react";
-import Axios from "axios";
+import Axios, { AxiosResponse } from "axios";
 
 interface ILoginState {
   email: string;
@@ -60,10 +60,10 @@ export class LoginForm extends React.Component<ILoginProps, ILoginState> {
     event.preventDefault();
     Axios.post("https://localhost:44376/admin/login",{userName:this.state.email, password:this.state.password})
         .then(result => {
-            if(result.status === 200){
+            if(result.status == 200){
                 console.log(result.data);
                 this.props.loginSuccess(result.data);
-            }else if(result.status === 401){
+            }else if(result.status == 401){
                 console.log("asdasdasd" + result.data);
             }
         })
