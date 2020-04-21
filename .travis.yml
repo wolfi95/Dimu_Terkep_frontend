@@ -10,8 +10,8 @@ cache:
   - node_modules
 install: true
 script:
-  - yarn test
-  - yarn run deploy
+  - npm run build
+  - npm run test
 deploy:
   provider: heroku
   app: dimu-frontend
