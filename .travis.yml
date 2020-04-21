@@ -1,16 +1,16 @@
 language: node_js
 node_js:
-  - "13.9"
+- '13.9'
 cache:
   yarn: true
   directories:
   - node_modules
 install: true
 script:
-  - npm run build
-  - npm run test
+- npm run build
+- npm run test
 deploy:
   provider: heroku
   app: dimu-frontend
   api_key:
-    secure: hNbLngEgsxZVI9foYeEcnmqvvEmhp1RgNfjabyWyv2Di7G+uKMzc0kzRKFDLOLsDz4SPNttYdXaatD/hn5b74KIv98qUhH39I8CyiyglelVD+2OIneRN2B4+/s9XhS49FeK17dOqXGY3bNQTqBrlCo99X8AGINUANqMqJ0VnTFHkAzhc4j858FB8uBPlPhJNz9yPnZq0yc8aGME90dCwglMryJCv8zn7uhaEx+PHRLCF7pikvGSgtIKgQWbAHd1x2nfcv5StKsaicWBKmFXYirg2vJQYt883HRjIiv2bJDagYwxf7uAU3oI45FuV48pjN+V7qRbzXuWKcNyOdKJnyjjg/e183N7XsBsdS3giERe9PuznrVxAsSnVkwun8nQB9+nTZFRs46K/3aPz+IeXeFRWxHkm+BD4jr+/oN3vpTdGiiWvnTLxRWTGLEpM7gDIKDwPTnw/AvC3kV5Va/bBh0OrN66lBrdcgJ6XDEhqYqFcvzvpncLjxAaDrG6tvWgPMy8e7NoFMlx7kn0nHqvgN7g151Vn8jwvELkihD1xVLtNjKDlhwnUl+AEq8jP2juQ1xuYW/rZcMXwCWfMbumKCkV7ETCHSrkkmJtLzfiSUskm7TG0UsO4UFatzhy9ErpDIIBSYtXOEJjbXa4HpRKmXhaYaGk4oGttzFyS9O2gQ+w=
+    secure: HIIN3nMUEMTftlZS343wg4fAOegs+JTjpMroeERP09OsGgebor7bsqnu+Ye4dVPXa+28W4vpffBEV1IQFc4ve26AeDKES1pRbnmXO/i5eTTxJC4VBhDsGwl5S/p73Gu+nPPqz36U482Rcu4B0pWX8zAZCSPElKWfke9U7HQFShJENB5sfR96gnWkuRZdBu8+Id+rdP25rXBz5ocmArSVVkXXR8itxa+5AiTIfKIry3/tPsjacN8wZ5fofasN3EfNJRDP/krF6nMUlWA0LzhxXPGWGCUoLxHqN2emspINju6XnTbPEsT7+YPrdQzMHB/o2w7kIyHd7UyfuS+up4oMPCMS4ZeuzF56fd88q++FI9KyaqBnScaxcP13fF9i2IrqBqJlcACCm0UPcbL68R0xjjmgPvQ5ohKR2HKJLGIvDfuHblzmR3E0MQciX8dVsdaY2T6cVmbFQYKTMbQI9MPIHgIHm3t9Q7WPcksniI6V5dYB2CRDxyJHubOtF+YeYX0LY1Q3eo3NcNoBmVHklcxFoPBi1qz6zMyBMiGdraiePMe5Yb3hWP8SZTEKsNDs1WSapE3R5HYVeuT6MVTTf96p6Dhw+6yBbB6Hu63WMRhP7VBZWCIHi4Gk9v4vnIohtDWtyBSZspq+w6nl0P0aaoS/M98ZYKhmKSMWTijFmM0j+0M=
