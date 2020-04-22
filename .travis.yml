@@ -2,7 +2,7 @@ language: node_js
 node_js:
 - '13.9'
 cache:
-  yarn: true
+  npm: false
   directories:
   - node_modules
 install: true
