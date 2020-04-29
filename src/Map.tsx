@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Map as LeafletMap, TileLayer, Marker, Popup } from "react-leaflet";
 import axios from "./api/api";
-import { useWhatChanged } from '@simbathesailor/use-what-changed';
-import LinkIcon from '@material-ui/icons/Link';
+import { useWhatChanged } from "@simbathesailor/use-what-changed";
+import LinkIcon from "@material-ui/icons/Link";
 import { Grid, Link } from "@material-ui/core";
-import "./App.css"; 
+import renderInstituteIcon from "./components/InstituteIcons";
+import "./App.css";
 
 export interface IIntezmeny {
   nev: string;
@@ -12,7 +13,7 @@ export interface IIntezmeny {
   megszunes: number;
   intezmenyId: string;
   leiras: string;
-  intezmenyTipus: number;
+  tipus: number;
   latitude: number;
   longitude: number;
   link: string;
@@ -35,7 +36,7 @@ function Map() {
     fetchData();
   }, []);
 
-  useWhatChanged([activeInstitute,])
+  useWhatChanged([pins, activeInstitute]);
 
   return (
     <LeafletMap
@@ -56,42 +57,77 @@ function Map() {
         <Marker
           key={index}
           position={[institute["latitude"], institute["longitude"]]}
-          onClick={
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            async () => {
-              try {
-                let result = await axios.get("Intezmeny/" + institute['intezmenyId']);
-                console.log(result)
-                setActiveInistitute(result.data);
-              } catch (e) {
-                console.log(e);
-              }
+          onClick={async () => {
+            try {
+              let result = await axios.get(
+                "Intezmeny/" + institute["intezmenyId"]
+              );
+              console.log(result);
+              setActiveInistitute(result.data);
+            } catch (e) {
+              console.log(e);
             }
-          }
+          }}
         />
       ))}
 
       {activeInstitute && (
         <Popup
-          position={[activeInstitute['intezmenyHelyszinek'][0].latitude, activeInstitute['intezmenyHelyszinek'][0].longitude]}
+          position={[
+            activeInstitute["intezmenyHelyszinek"][0].latitude,
+            activeInstitute["intezmenyHelyszinek"][0].longitude,
+          ]}
           onClose={() => {
             setActiveInistitute(undefined);
           }}
         >
           <div>
-            <h2 style={{marginBottom: "0px"}}>{activeInstitute.nev} ({activeInstitute.alapitas} - {activeInstitute.megszunes})</h2>
-            <Grid className="link-block" container direction="row" alignItems="center">
+            <Grid
+              className="link-block"
+              container
+              direction="row"
+              alignItems="center"
+              style={{ flexWrap: "nowrap" }}
+            >
               <Grid item>
-                <LinkIcon className="link-icon"/>
+                <div className="inst-type-icon">
+                  {renderInstituteIcon(activeInstitute.tipus)}
+                </div>
               </Grid>
               <Grid item>
-                <Link href={activeInstitute.link} target="_blank" rel="noopener noreferrer">
-                {activeInstitute.link !== "" ? activeInstitute.link : '-'}
+                <h2 style={{ marginBottom: "0px", marginTop: "0px" }}>
+                  {activeInstitute.nev}
+                </h2>
+                <div
+                  className="subtitle"
+                  style={{ marginBottom: "0px", marginTop: "0px" }}
+                >
+                  ({activeInstitute.alapitas} - {activeInstitute.megszunes})
+                </div>
+              </Grid>
+            </Grid>
+
+            <Grid
+              className="link-block"
+              container
+              direction="row"
+              alignItems="center"
+            >
+              <Grid item>
+                <LinkIcon className="link-icon" />
+              </Grid>
+              <Grid item>
+                <Link
+                  href={activeInstitute.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {activeInstitute.link !== "" ? activeInstitute.link : "-"}
                 </Link>
               </Grid>
             </Grid>
             <div className="instDesc">
-              {activeInstitute.leiras !== "" ? activeInstitute.leiras : '-' }
+              {activeInstitute.leiras !== "" ? activeInstitute.leiras : "-"}
             </div>
           </div>
         </Popup>

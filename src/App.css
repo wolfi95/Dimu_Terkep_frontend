@@ -45,3 +45,13 @@
 .link-block {
   margin-bottom: 8px;
 }
+
+.inst-type-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  margin: 0px 13px 8px 0px;
+}
+
+.subtitle {
+  font-size: larger;
+}
