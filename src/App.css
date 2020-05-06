@@ -38,7 +38,7 @@
 }
 
 .link-icon {
-  font-size: 1.3rem!important;
+  font-size: 1.3rem !important;
   margin: 0px 5px -2px 0px;
 }
 
@@ -57,7 +57,7 @@
 }
 
 .leaflet-container {
-  z-index: 10
+  z-index: 10;
 }
 
 .filterBlock {
@@ -109,11 +109,20 @@
   padding: 12px 0px;
 }
 
-.timelineBlock >  span {
+.timelineBlock > span {
   width: 90%;
 }
 
 .timelineBlock .MuiSlider-mark {
   height: 15px;
   top: 7px;
+}
+
+.leaflet-popup-content-wrapper {
+  max-height: 500px;
+  overflow: scroll;
+}
+
+.instDesc .MuiDivider-middle {
+  margin-top: 1em;
 }

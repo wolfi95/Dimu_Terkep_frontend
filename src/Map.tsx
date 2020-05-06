@@ -3,7 +3,7 @@ import { Map as LeafletMap, TileLayer, Marker, Popup } from "react-leaflet";
 import axios from "./api/api";
 import { useWhatChanged } from "@simbathesailor/use-what-changed";
 import LinkIcon from "@material-ui/icons/Link";
-import { Grid, Link } from "@material-ui/core";
+import { Grid, Link, Divider } from "@material-ui/core";
 import renderInstituteIcon from "./components/InstituteIcons";
 import "./App.css";
 import InstFilter from "./components/InstTypeFilters";
@@ -20,6 +20,29 @@ export interface IIntezmeny {
   latitude: number;
   longitude: number;
   link: string;
+  intezmenyHelyszinek: IIntezmenyHelyszin[];
+  intezmenyVezetok: IIntezmenyVezeto[];
+  esemenyek: IEsemeny[];
+}
+
+export interface IIntezmenyVezeto {
+  nev: string;
+  tol: number;
+  ig: number;
+}
+
+export interface IEsemeny {
+  nev: string;
+  datum: string;
+  szervezo: string;
+}
+
+export interface IIntezmenyHelyszin {
+  helyszin: string;
+  nyitas: number;
+  koltozes: number;
+  latitude: number;
+  longitude: number;
 }
 
 const Map = () => {
@@ -175,7 +198,55 @@ const Map = () => {
                 </Grid>
               </Grid>
               <div className="instDesc">
-                {activeInstitute.leiras !== "" ? activeInstitute.leiras : "-"}
+                {activeInstitute.leiras}
+                <Divider variant="middle" />
+                <h3>Intézmény történelmi helyszínei</h3>
+                <ul>
+                  {activeInstitute.intezmenyHelyszinek
+                    .sort((a, b) => (a.nyitas > b.nyitas ? -1 : 1))
+                    .map((place) => (
+                      <li className="previousPlaces">
+                        <div>
+                          <strong>{place.helyszin}</strong> ({place.nyitas} –{" "}
+                          {place.koltozes})
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+                {activeInstitute.intezmenyVezetok.length !== 0 && (
+                  <div className="instLeadersContainer">
+                    <h3>Intézmény történelmi vezetői</h3>
+                    <ul>
+                      {activeInstitute.intezmenyVezetok
+                        .sort((a, b) => (a.tol > b.tol ? -1 : 1))
+                        .map((leader) => (
+                          <li className="previousLeaders">
+                            <div>
+                              <strong>{leader.nev}</strong> ({leader.tol} –{" "}
+                              {leader.ig})
+                            </div>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                )}
+                {activeInstitute.esemenyek.length !== 0 && (
+                  <div className="instEventsContainer">
+                    <h3>Intézmény eseményei</h3>
+                    <ul>
+                      {activeInstitute.esemenyek
+                        .sort((a, b) => (a.datum > b.datum ? -1 : 1))
+                        .map((event) => (
+                          <li className="instEvents">
+                            <div>
+                              <strong>{event.nev}</strong> ({event.datum});{" "}
+                              {event.szervezo}
+                            </div>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           </Popup>
