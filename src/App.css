@@ -92,3 +92,28 @@
   width: 300px;
   background-color: rgba(255, 255, 255, 0.85);
 }
+
+.timelineContainer {
+  width: 100%;
+  position: fixed;
+  bottom: 180px;
+  z-index: 50;
+}
+
+.timelineBlock {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  margin: 0px 30px;
+  padding: 12px 0px;
+}
+
+.timelineBlock >  span {
+  width: 90%;
+}
+
+.timelineBlock .MuiSlider-mark {
+  height: 15px;
+  top: 7px;
+}

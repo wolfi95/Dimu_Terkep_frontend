@@ -8,6 +8,7 @@ import renderInstituteIcon from "./components/InstituteIcons";
 import "./App.css";
 import InstFilter from "./components/InstTypeFilters";
 import InstituteSearch from "./components/InstituteSearch";
+import Timeline from "./components/Timeline";
 
 export interface IIntezmeny {
   nev: string;
@@ -23,14 +24,19 @@ export interface IIntezmeny {
 
 const Map = () => {
   const checkedValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const borderDates = [1778, new Date().getFullYear()];
   const [instTypes, setActiveInstTypes] = useState(checkedValues);
   const [instSearchVal, setActiveInstSearch] = useState("");
+  const [timelineVal, setTimelineVal] = useState<number[]>(borderDates);
   const [activeInstitute, setActiveInistitute] = useState<
     IIntezmeny | undefined
   >(undefined);
   const [pins, setPins] = useState([]);
   const onSearchValChange = (searchVal: string) => {
     setActiveInstSearch(searchVal);
+  };
+  const onTimelineChange = (event: any, newValue: number | number[]) => {
+    setTimelineVal(newValue as number[]);
   };
   const onFilterChange = (data: number) => {
     const toggleArrayValue = instTypes.includes(data)
@@ -42,7 +48,8 @@ const Map = () => {
     const fetchData = async () => {
       const result = await axios.post("/Intezmeny", {
         intezmenyNev: instSearchVal,
-        mukodestol: 0,
+        mukodestol: timelineVal[0],
+        mukodesig: timelineVal[1],
         intezmenyTipus: instTypes,
       });
 
@@ -50,15 +57,28 @@ const Map = () => {
     };
 
     fetchData();
-  }, [instTypes, instSearchVal]);
+  }, [instTypes, instSearchVal, timelineVal]);
 
-  useWhatChanged([pins, activeInstitute, instTypes, instSearchVal]);
+  useWhatChanged([
+    pins,
+    activeInstitute,
+    instTypes,
+    instSearchVal,
+    timelineVal,
+  ]);
 
   return (
     <React.Fragment>
       <InstituteSearch
         onSearchValChange={(searchVal) => {
           onSearchValChange(searchVal);
+        }}
+      />
+      <Timeline
+        currentDates={timelineVal}
+        initialDates={borderDates}
+        onTimelineChange={(event, newValue) => {
+          onTimelineChange(event, newValue);
         }}
       />
       <InstFilter
