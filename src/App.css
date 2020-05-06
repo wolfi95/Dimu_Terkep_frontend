@@ -55,3 +55,40 @@
 .subtitle {
   font-size: larger;
 }
+
+.leaflet-container {
+  z-index: 10
+}
+
+.filterBlock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+  position: fixed;
+  bottom: 15px;
+  margin: 0px 15px;
+}
+
+.filterBlock label {
+  background-color: rgba(255, 255, 255, 0.85);
+  margin: 8px 15px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  height: 50px;
+  flex: 1 0 12%;
+}
+
+.searchBlock {
+  position: fixed;
+  top: 10px;
+  left: 65px;
+  z-index: 50;
+  border-radius: 12px;
+}
+
+.searchBlock input {
+  width: 300px;
+  background-color: rgba(255, 255, 255, 0.85);
+}
