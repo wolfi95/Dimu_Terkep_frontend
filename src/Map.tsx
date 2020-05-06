@@ -22,39 +22,51 @@ export interface IIntezmeny {
 }
 
 const Map = () => {
-  const checkedValues = [0,1,2,3,4,5,6,7,8,9,10,11]
-  const [instTypes, setActiveInstTypes] = useState(checkedValues)
+  const checkedValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const [instTypes, setActiveInstTypes] = useState(checkedValues);
+  const [instSearchVal, setActiveInstSearch] = useState("");
   const [activeInstitute, setActiveInistitute] = useState<
     IIntezmeny | undefined
   >(undefined);
   const [pins, setPins] = useState([]);
-  const onFilterChange = (data) => {
-    const toggleArrayValue =
-    instTypes.includes(data)
-    ? instTypes.filter(el => el !== data)
-    : [...instTypes, data]
-    setActiveInstTypes(toggleArrayValue)
-    console.log(data)
-  }
+  const onSearchValChange = (searchVal: string) => {
+    setActiveInstSearch(searchVal);
+  };
+  const onFilterChange = (data: number) => {
+    const toggleArrayValue = instTypes.includes(data)
+      ? instTypes.filter((el) => el !== data)
+      : [...instTypes, data];
+    setActiveInstTypes(toggleArrayValue);
+  };
   React.useEffect(() => {
     const fetchData = async () => {
       const result = await axios.post("/Intezmeny", {
+        intezmenyNev: instSearchVal,
         mukodestol: 0,
-        intezmenyTipus: instTypes
+        intezmenyTipus: instTypes,
       });
-      
+
       setPins(result.data);
     };
 
     fetchData();
-  }, [instTypes]);
+  }, [instTypes, instSearchVal]);
 
-  useWhatChanged([pins, activeInstitute, instTypes]);
+  useWhatChanged([pins, activeInstitute, instTypes, instSearchVal]);
 
   return (
     <React.Fragment>
-      <InstituteSearch />
-      <InstFilter instTypes = {instTypes} onFilterChange = {(data) => { onFilterChange(data) }} />
+      <InstituteSearch
+        onSearchValChange={(searchVal) => {
+          onSearchValChange(searchVal);
+        }}
+      />
+      <InstFilter
+        instTypes={instTypes}
+        onFilterChange={(data) => {
+          onFilterChange(data);
+        }}
+      />
       <LeafletMap
         center={[47.4979, 19.0402]}
         zoom={14}
