@@ -6,6 +6,8 @@ import LinkIcon from "@material-ui/icons/Link";
 import { Grid, Link } from "@material-ui/core";
 import renderInstituteIcon from "./components/InstituteIcons";
 import "./App.css";
+import InstFilter from "./components/InstTypeFilters";
+import InstituteSearch from "./components/InstituteSearch";
 
 export interface IIntezmeny {
   nev: string;
@@ -39,6 +41,9 @@ function Map() {
   useWhatChanged([pins, activeInstitute]);
 
   return (
+    <React.Fragment>
+    <InstituteSearch/>
+    <InstFilter/>
     <LeafletMap
       center={[47.4979, 19.0402]}
       zoom={14}
@@ -133,7 +138,8 @@ function Map() {
         </Popup>
       )}
     </LeafletMap>
-  );
+    </React.Fragment>
+    );
 }
 
 export default Map;
