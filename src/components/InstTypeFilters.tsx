@@ -25,6 +25,7 @@ const InstFilter = (props) => {
     <div className="filterBlock">
       {labelList.map((element) => (
         <FormControlLabel
+          key={element.id}
           control={<Checkbox key={element.id} />}
           label={element.label}
           onChange={() => handleChange(element.id)}
