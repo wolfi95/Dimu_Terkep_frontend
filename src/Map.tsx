@@ -9,46 +9,12 @@ import "./App.css";
 import InstFilter from "./components/InstTypeFilters";
 import InstituteSearch from "./components/InstituteSearch";
 import Timeline from "./components/Timeline";
-
-export interface IIntezmeny {
-  nev: string;
-  alapitas: number;
-  megszunes: number;
-  intezmenyId: string;
-  leiras: string;
-  tipus: number;
-  latitude: number;
-  longitude: number;
-  link: string;
-  intezmenyHelyszinek: IIntezmenyHelyszin[];
-  intezmenyVezetok: IIntezmenyVezeto[];
-  esemenyek: IEsemeny[];
-}
-
-export interface IIntezmenyVezeto {
-  nev: string;
-  tol: number;
-  ig: number;
-}
-
-export interface IEsemeny {
-  nev: string;
-  datum: string;
-  szervezo: string;
-}
-
-export interface IIntezmenyHelyszin {
-  helyszin: string;
-  nyitas: number;
-  koltozes: number;
-  latitude: number;
-  longitude: number;
-}
+import { IIntezmeny } from "./interfaces/InstituteInterfaces"
 
 const Map = () => {
-  const checkedValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const initInstTypes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   const borderDates = [1778, new Date().getFullYear()];
-  const [instTypes, setActiveInstTypes] = useState(checkedValues);
+  const [instTypes, setActiveInstTypes] = useState(initInstTypes);
   const [instSearchVal, setActiveInstSearch] = useState("");
   const [timelineVal, setTimelineVal] = useState<number[]>(borderDates);
   const [activeInstitute, setActiveInistitute] = useState<
