@@ -1,5 +1,6 @@
 import React from "react";
-import { Checkbox, FormControlLabel } from "@material-ui/core";
+import { Checkbox } from "@material-ui/core";
+import renderInstituteIcon from "./InstituteIcons";
 
 const InstFilter = (props) => {
   const handleChange = (id) => {
@@ -24,13 +25,15 @@ const InstFilter = (props) => {
   return (
     <div className="filterBlock">
       {labelList.map((element) => (
-        <FormControlLabel
+        <label className="filterInstType" key={element.id}>
+        <div>{element.label}</div>
+        {renderInstituteIcon(element.id, "instFilterIcon")}
+        <Checkbox
           key={element.id}
-          control={<Checkbox key={element.id} />}
-          label={element.label}
           onChange={() => handleChange(element.id)}
           checked={props.instTypes.includes(element.id)}
         />
+        </label>
       ))}
     </div>
   );

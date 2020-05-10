@@ -12,32 +12,32 @@ import { ReactComponent as OnkormanyzatiGaleria } from "../assets/icons/onkorman
 import { ReactComponent as OnkormanyzatiKulturalisKozpont } from "../assets/icons/onkormanyzatikulturaliskozpont.svg";
 import { ReactComponent as OnkormanyzatiMuzeum } from "../assets/icons/onkormanyzatimuzeum.svg";
 
-function renderInstituteIcon(instituteType) {
+function renderInstituteIcon(instituteType, className = "" ) {
   switch (instituteType) {
     case 0:
-      return <AllamiMuzeum />;
+      return <AllamiMuzeum className={className} />;
     case 1:
-      return <AllamiKulturalisIntezet />;
+      return <AllamiKulturalisIntezet className={className} />;
     case 2:
-      return <OnkormanyzatiMuzeum />;
+      return <OnkormanyzatiMuzeum className={className} />;
     case 3:
-      return <OnkormanyzatiKulturalisKozpont />;
+      return <OnkormanyzatiKulturalisKozpont className={className} />;
     case 4:
-      return <OnkormanyzatiGaleria />;
+      return <OnkormanyzatiGaleria className={className} />;
     case 5:
-      return <KereskedelmiGaleria />;
+      return <KereskedelmiGaleria className={className} />;
     case 6:
-      return <FuggetlenKulturalisIntezmeny />;
+      return <FuggetlenKulturalisIntezmeny className={className} />;
     case 7:
-      return <NonProfitGaleria />;
+      return <NonProfitGaleria className={className} />;
     case 8:
-      return <KulturalisIntezet />;
+      return <KulturalisIntezet className={className} />;
     case 9:
-      return <Egyesulet />;
+      return <Egyesulet className={className} />;
     case 10:
-      return <OktatasiIntezmeny />;
+      return <OktatasiIntezmeny className={className} />;
     case 11:
-      return <EtteremKocsmaGaleria />;
+      return <EtteremKocsmaGaleria className={className} />;
     default:
       break;
   }
