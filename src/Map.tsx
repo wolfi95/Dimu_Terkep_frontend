@@ -9,20 +9,29 @@ import "./App.css";
 import InstFilter from "./components/InstTypeFilters";
 import InstituteSearch from "./components/InstituteSearch";
 import Timeline from "./components/Timeline";
-import { IIntezmeny } from "./interfaces/InstituteInterfaces"
+import RequestFailedAlert from "./components/RequestFailedAlert";
+import { IIntezmeny } from "./interfaces/InstituteInterfaces";
+import { SearchTypeId } from "./enums/enums";
 
 const Map = () => {
   const initInstTypes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   const borderDates = [1778, new Date().getFullYear()];
+  const [alertOpen, setAlertOpen] = React.useState(false);
   const [instTypes, setActiveInstTypes] = useState(initInstTypes);
-  const [instSearchVal, setActiveInstSearch] = useState("");
+  const [searchVal, setActiveSearchVal] = useState("");
+  const [searchType, setSearchType] = useState(
+    SearchTypeId.IntezmenyNev as string
+  );
   const [timelineVal, setTimelineVal] = useState<number[]>(borderDates);
   const [activeInstitute, setActiveInistitute] = useState<
     IIntezmeny | undefined
   >(undefined);
   const [pins, setPins] = useState([]);
   const onSearchValChange = (searchVal: string) => {
-    setActiveInstSearch(searchVal);
+    setActiveSearchVal(searchVal);
+  };
+  const onSearchTypeChange = (searchType: string) => {
+    setSearchType(SearchTypeId[searchType]);
   };
   const onTimelineChange = (event: any, newValue: number | number[]) => {
     setTimelineVal(newValue as number[]);
@@ -35,32 +44,34 @@ const Map = () => {
   };
   React.useEffect(() => {
     const fetchData = async () => {
-      const result = await axios.post("/Intezmeny", {
-        intezmenyNev: instSearchVal,
-        mukodestol: timelineVal[0],
-        mukodesig: timelineVal[1],
-        intezmenyTipus: instTypes,
-      });
-
-      setPins(result.data);
+      try {
+        const result = await axios.post("/Intezmeny", {
+          [searchType]: searchVal,
+          mukodestol: timelineVal[0],
+          mukodesig: timelineVal[1],
+          intezmenyTipus: instTypes,
+        });
+        setPins(result.data);
+      } catch (error) {
+        console.log(error);
+        setAlertOpen(true);
+      }
     };
 
     fetchData();
-  }, [instTypes, instSearchVal, timelineVal]);
+  }, [instTypes, searchVal, timelineVal, searchType]);
 
-  useWhatChanged([
-    pins,
-    activeInstitute,
-    instTypes,
-    instSearchVal,
-    timelineVal,
-  ]);
+  useWhatChanged([pins, activeInstitute, instTypes, searchVal, timelineVal]);
 
   return (
     <React.Fragment>
+      <RequestFailedAlert setOpen={setAlertOpen} open={alertOpen} />
       <InstituteSearch
         onSearchValChange={(searchVal) => {
           onSearchValChange(searchVal);
+        }}
+        onSearchTypeChange={(searchType) => {
+          onSearchTypeChange(searchType);
         }}
       />
       <Timeline
@@ -99,10 +110,10 @@ const Map = () => {
                 let result = await axios.get(
                   "Intezmeny/" + institute["intezmenyId"]
                 );
-                console.log(result);
                 setActiveInistitute(result.data);
               } catch (e) {
                 console.log(e);
+                setAlertOpen(true);
               }
             }}
           />
@@ -166,12 +177,12 @@ const Map = () => {
               <div className="instDesc">
                 {activeInstitute.leiras}
                 <Divider variant="middle" />
-                <h3>Intézmény történelmi helyszínei</h3>
+                <h3>Intézmény helyszínei</h3>
                 <ul>
                   {activeInstitute.intezmenyHelyszinek
                     .sort((a, b) => (a.nyitas > b.nyitas ? -1 : 1))
-                    .map((place) => (
-                      <li className="previousPlaces">
+                    .map((place, index) => (
+                      <li className="previousPlaces" key={index}>
                         <div>
                           <strong>{place.helyszin}</strong> ({place.nyitas} –{" "}
                           {place.koltozes})
@@ -181,12 +192,12 @@ const Map = () => {
                 </ul>
                 {activeInstitute.intezmenyVezetok.length !== 0 && (
                   <div className="instLeadersContainer">
-                    <h3>Intézmény történelmi vezetői</h3>
+                    <h3>Intézmény vezetői</h3>
                     <ul>
                       {activeInstitute.intezmenyVezetok
                         .sort((a, b) => (a.tol > b.tol ? -1 : 1))
-                        .map((leader) => (
-                          <li className="previousLeaders">
+                        .map((leader, index) => (
+                          <li className="previousLeaders" key={index}>
                             <div>
                               <strong>{leader.nev}</strong> ({leader.tol} –{" "}
                               {leader.ig})
@@ -202,8 +213,8 @@ const Map = () => {
                     <ul>
                       {activeInstitute.esemenyek
                         .sort((a, b) => (a.datum > b.datum ? -1 : 1))
-                        .map((event) => (
-                          <li className="instEvents">
+                        .map((event, index) => (
+                          <li className="instEvents" key={index}>
                             <div>
                               <strong>{event.nev}</strong> ({event.datum});{" "}
                               {event.szervezo}
