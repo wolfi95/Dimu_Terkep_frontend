@@ -93,6 +93,14 @@
   background-color: rgba(255, 255, 255, 0.85);
 }
 
+.MuiFormControl-root.searchSelectForm {
+  margin-right: 25px;
+}
+
+.MuiFormControl-root.searchSelectForm > .searchTypeSelector {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
 .timelineContainer {
   width: 100%;
   position: fixed;
@@ -125,4 +133,12 @@
 
 .instDesc .MuiDivider-middle {
   margin-top: 1em;
+}
+
+.alertBarBlock .alertBar {
+  left: auto;
+  right: 45px;
+  top: 15px;
+  bottom: auto;
+  transform: translate(0)
 }
