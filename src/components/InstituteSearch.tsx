@@ -51,7 +51,7 @@ const InstituteSearch = (props) => {
           value={searchFieldLabel}
         >
           {menuItems.map((value, index) => (
-            <MenuItem value={value}>{value}</MenuItem>
+            <MenuItem key={index} value={value}>{value}</MenuItem>
           ))}
         </Select>
       </FormControl>
