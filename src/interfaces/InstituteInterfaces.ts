@@ -5,8 +5,6 @@ export interface IIntezmeny {
   intezmenyId: string;
   leiras: string;
   tipus: number;
-  latitude: number;
-  longitude: number;
   link: string;
   intezmenyHelyszinek: IIntezmenyHelyszin[];
   intezmenyVezetok: IIntezmenyVezeto[];
