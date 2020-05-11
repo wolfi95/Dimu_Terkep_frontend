@@ -13,29 +13,51 @@ import RequestFailedAlert from "./components/RequestFailedAlert";
 import { IIntezmeny } from "./interfaces/InstituteInterfaces";
 import { SearchType } from "./enums/enums";
 import { $enum } from "ts-enum-util";
+import { IPosition } from "./interfaces/PositionInterface";
 
 const Map = () => {
   const initInstTypes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   const borderDates = [1778, new Date().getFullYear()];
-  const initSearchType = $enum(SearchType).getKeyOrDefault(SearchType.IntezmenyNev) as string;
+  const initSearchType = $enum(SearchType).getKeyOrDefault(
+    SearchType.IntezmenyNev
+  ) as string;
   const [alertOpen, setAlertOpen] = React.useState(false);
   const [instTypes, setActiveInstTypes] = useState(initInstTypes);
   const [searchVal, setActiveSearchVal] = useState("");
   const [searchType, setSearchType] = useState(initSearchType);
   const [timelineVal, setTimelineVal] = useState<number[]>(borderDates);
+  const [activePopupPos, setPopupPos] = useState<IPosition>({
+    latitude: -1,
+    longitude: -1,
+  });
   const [activeInstitute, setActiveInistitute] = useState<
     IIntezmeny | undefined
   >(undefined);
   const [pins, setPins] = useState([]);
   const isSearchResult = (checkValue: string, checkType: string) => {
-    console.log("searchType: " + searchType);
-    console.log("checkType: " + checkType);
-    if (searchVal !== "" && searchType === $enum(SearchType).getKeyOrDefault(checkType) && checkValue.toLowerCase().includes(searchVal.toLowerCase())) {
+    if (
+      searchVal !== "" &&
+      searchType === $enum(SearchType).getKeyOrDefault(checkType) &&
+      checkValue.toLowerCase().includes(searchVal.toLowerCase())
+    ) {
       return true;
     } else {
       return false;
     }
-  }
+  };
+  const getInstAddr = (inst: IIntezmeny) => {
+    let latIdx = inst.intezmenyHelyszinek
+      .map((el) => el.latitude)
+      .indexOf(activePopupPos.latitude);
+    let longIdx = inst.intezmenyHelyszinek
+      .map((el) => el.longitude)
+      .indexOf(activePopupPos.longitude);
+    if (latIdx !== -1 && longIdx !== -1 && latIdx === longIdx) {
+      return inst.intezmenyHelyszinek[latIdx].helyszin;
+    } else {
+      return "";
+    }
+  };
   const onSearchValChange = (searchVal: string) => {
     setActiveSearchVal(searchVal);
   };
@@ -76,7 +98,7 @@ const Map = () => {
     <React.Fragment>
       <RequestFailedAlert setOpen={setAlertOpen} open={alertOpen} />
       <InstituteSearch
-        initSearchType = {initSearchType}
+        initSearchType={initSearchType}
         onSearchValChange={(searchVal) => {
           onSearchValChange(searchVal);
         }}
@@ -120,6 +142,10 @@ const Map = () => {
                 let result = await axios.get(
                   "Intezmeny/" + institute["intezmenyId"]
                 );
+                setPopupPos({
+                  latitude: institute["latitude"],
+                  longitude: institute["longitude"],
+                });
                 setActiveInistitute(result.data);
               } catch (e) {
                 console.log(e);
@@ -131,10 +157,7 @@ const Map = () => {
 
         {activeInstitute && (
           <Popup
-            position={[
-              activeInstitute["intezmenyHelyszinek"][0].latitude,
-              activeInstitute["intezmenyHelyszinek"][0].longitude,
-            ]}
+            position={[activePopupPos.latitude, activePopupPos.longitude]}
             onClose={() => {
               setActiveInistitute(undefined);
             }}
@@ -161,6 +184,13 @@ const Map = () => {
                     style={{ marginBottom: "0px", marginTop: "0px" }}
                   >
                     ({activeInstitute.alapitas} - {activeInstitute.megszunes})
+                  </div>
+
+                  <div
+                    className="subtitle"
+                    style={{ marginBottom: "0px", marginTop: "0px" }}
+                  >
+                    {getInstAddr(activeInstitute)}
                   </div>
                 </Grid>
               </Grid>
@@ -192,7 +222,18 @@ const Map = () => {
                   {activeInstitute.intezmenyHelyszinek
                     .sort((a, b) => (a.nyitas > b.nyitas ? -1 : 1))
                     .map((place, index) => (
-                      <li className={"previousPlaces " + (isSearchResult(place.helyszin, SearchType.IntezmenyCim) ? "highlightSearchRes" : "")} key={index}>
+                      <li
+                        className={
+                          "previousPlaces " +
+                          (isSearchResult(
+                            place.helyszin,
+                            SearchType.IntezmenyCim
+                          )
+                            ? "highlightSearchRes"
+                            : "")
+                        }
+                        key={index}
+                      >
                         <div>
                           <strong>{place.helyszin}</strong> ({place.nyitas} –{" "}
                           {place.koltozes})
@@ -207,7 +248,18 @@ const Map = () => {
                       {activeInstitute.intezmenyVezetok
                         .sort((a, b) => (a.tol > b.tol ? -1 : 1))
                         .map((leader, index) => (
-                          <li className={"previousLeaders " + (isSearchResult(leader.nev, SearchType.IntezmenyVezeto) ? "highlightSearchRes" : "")} key={index}>
+                          <li
+                            className={
+                              "previousLeaders " +
+                              (isSearchResult(
+                                leader.nev,
+                                SearchType.IntezmenyVezeto
+                              )
+                                ? "highlightSearchRes"
+                                : "")
+                            }
+                            key={index}
+                          >
                             <div>
                               <strong>{leader.nev}</strong> ({leader.tol} –{" "}
                               {leader.ig})
@@ -224,7 +276,15 @@ const Map = () => {
                       {activeInstitute.esemenyek
                         .sort((a, b) => (a.datum > b.datum ? -1 : 1))
                         .map((event, index) => (
-                          <li className={"instEvents " + (isSearchResult(event.nev, SearchType.EsemenyNev) ? "highlightSearchRes" : "")} key={index}>
+                          <li
+                            className={
+                              "instEvents " +
+                              (isSearchResult(event.nev, SearchType.EsemenyNev)
+                                ? "highlightSearchRes"
+                                : "")
+                            }
+                            key={index}
+                          >
                             <div>
                               <strong>{event.nev}</strong> ({event.datum});{" "}
                               {event.szervezo}
