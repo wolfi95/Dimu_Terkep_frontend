@@ -11,27 +11,36 @@ import InstituteSearch from "./components/InstituteSearch";
 import Timeline from "./components/Timeline";
 import RequestFailedAlert from "./components/RequestFailedAlert";
 import { IIntezmeny } from "./interfaces/InstituteInterfaces";
-import { SearchTypeId } from "./enums/enums";
+import { SearchType } from "./enums/enums";
+import { $enum } from "ts-enum-util";
 
 const Map = () => {
   const initInstTypes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   const borderDates = [1778, new Date().getFullYear()];
+  const initSearchType = $enum(SearchType).getKeyOrDefault(SearchType.IntezmenyNev) as string;
   const [alertOpen, setAlertOpen] = React.useState(false);
   const [instTypes, setActiveInstTypes] = useState(initInstTypes);
   const [searchVal, setActiveSearchVal] = useState("");
-  const [searchType, setSearchType] = useState(
-    SearchTypeId.IntezmenyNev as string
-  );
+  const [searchType, setSearchType] = useState(initSearchType);
   const [timelineVal, setTimelineVal] = useState<number[]>(borderDates);
   const [activeInstitute, setActiveInistitute] = useState<
     IIntezmeny | undefined
   >(undefined);
   const [pins, setPins] = useState([]);
+  const isSearchResult = (checkValue: string, checkType: string) => {
+    console.log("searchType: " + searchType);
+    console.log("checkType: " + checkType);
+    if (searchVal !== "" && searchType === $enum(SearchType).getKeyOrDefault(checkType) && checkValue.toLowerCase().includes(searchVal.toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   const onSearchValChange = (searchVal: string) => {
     setActiveSearchVal(searchVal);
   };
   const onSearchTypeChange = (searchType: string) => {
-    setSearchType(SearchTypeId[searchType]);
+    setSearchType(searchType);
   };
   const onTimelineChange = (event: any, newValue: number | number[]) => {
     setTimelineVal(newValue as number[]);
@@ -67,6 +76,7 @@ const Map = () => {
     <React.Fragment>
       <RequestFailedAlert setOpen={setAlertOpen} open={alertOpen} />
       <InstituteSearch
+        initSearchType = {initSearchType}
         onSearchValChange={(searchVal) => {
           onSearchValChange(searchVal);
         }}
@@ -182,7 +192,7 @@ const Map = () => {
                   {activeInstitute.intezmenyHelyszinek
                     .sort((a, b) => (a.nyitas > b.nyitas ? -1 : 1))
                     .map((place, index) => (
-                      <li className="previousPlaces" key={index}>
+                      <li className={"previousPlaces " + (isSearchResult(place.helyszin, SearchType.IntezmenyCim) ? "highlightSearchRes" : "")} key={index}>
                         <div>
                           <strong>{place.helyszin}</strong> ({place.nyitas} –{" "}
                           {place.koltozes})
@@ -197,7 +207,7 @@ const Map = () => {
                       {activeInstitute.intezmenyVezetok
                         .sort((a, b) => (a.tol > b.tol ? -1 : 1))
                         .map((leader, index) => (
-                          <li className="previousLeaders" key={index}>
+                          <li className={"previousLeaders " + (isSearchResult(leader.nev, SearchType.IntezmenyVezeto) ? "highlightSearchRes" : "")} key={index}>
                             <div>
                               <strong>{leader.nev}</strong> ({leader.tol} –{" "}
                               {leader.ig})
@@ -214,7 +224,7 @@ const Map = () => {
                       {activeInstitute.esemenyek
                         .sort((a, b) => (a.datum > b.datum ? -1 : 1))
                         .map((event, index) => (
-                          <li className="instEvents" key={index}>
+                          <li className={"instEvents " + (isSearchResult(event.nev, SearchType.EsemenyNev) ? "highlightSearchRes" : "")} key={index}>
                             <div>
                               <strong>{event.nev}</strong> ({event.datum});{" "}
                               {event.szervezo}
