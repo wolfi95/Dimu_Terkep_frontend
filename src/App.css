@@ -146,6 +146,12 @@ body {
   padding: 12px 0px;
 }
 
+@media screen and (max-width: 1300px) {
+  .timelineContainer {
+    bottom: 280px;
+  }
+}
+
 .timelineBlock > span {
   width: 90%;
 }
@@ -170,4 +176,8 @@ body {
   top: 15px;
   bottom: auto;
   transform: translate(0)
+}
+
+.highlightSearchRes {
+  color: #3f51b5;
 }

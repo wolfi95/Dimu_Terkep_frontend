@@ -6,16 +6,17 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { Select } from "@material-ui/core";
-import { SearchTypeId, SearchTypeName } from "../enums/enums";
+import { SearchType } from "../enums/enums";
+import { $enum } from "ts-enum-util";
 
 const InstituteSearch = (props) => {
   const [searchFieldLabel, setSearchFieldLabel] = useState(
-    SearchTypeName.IntezmenyNev as string
+    SearchType[props.initSearchType] as string
   );
   const [searchFieldText, setSearchFieldText] = useState("");
   let menuItems: string[] = [];
-  for (const key in SearchTypeName) {
-    menuItems.push(SearchTypeName[key]);
+  for (const key in SearchType) {
+    menuItems.push(SearchType[key]);
   }
   const handleChange = (event) => {
     setSearchFieldText(event.target.value);
@@ -23,20 +24,7 @@ const InstituteSearch = (props) => {
   };
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSearchFieldLabel(event.target.value as string);
-    setSearchFieldText("");
-    let searchTypeTerm = "";
-    switch (event.target.value) {
-      case SearchTypeName.IntezmenyNev:
-        searchTypeTerm = SearchTypeId.IntezmenyNev;
-        break;
-      case SearchTypeName.IntezmenyCim:
-        searchTypeTerm = SearchTypeId.IntezmenyCim;
-        break;
-      case SearchTypeName.IntezmenyVezeto:
-        searchTypeTerm = SearchTypeId.IntezmenyVezeto;
-        break;
-    }
-    props.onSearchTypeChange(searchTypeTerm as string);
+    props.onSearchTypeChange($enum(SearchType).getKeyOrDefault(event.target.value as string, "IntezmenyNev"));
   };
 
   return (
