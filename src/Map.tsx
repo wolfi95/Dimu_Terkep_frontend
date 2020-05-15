@@ -14,6 +14,7 @@ import { IIntezmeny } from "./interfaces/InstituteInterfaces";
 import { SearchType } from "./enums/enums";
 import { $enum } from "ts-enum-util";
 import { IPosition } from "./interfaces/PositionInterface";
+import ArtlasLogo from "./components/ArtlasLogo";
 
 const Map = () => {
   const initInstTypes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -97,6 +98,7 @@ const Map = () => {
   return (
     <React.Fragment>
       <RequestFailedAlert setOpen={setAlertOpen} open={alertOpen} />
+      <ArtlasLogo />
       <InstituteSearch
         initSearchType={initSearchType}
         onSearchValChange={(searchVal) => {
@@ -214,11 +216,11 @@ const Map = () => {
                   </Link>
                 </Grid>
               </Grid>
-              <div className="instDesc">
-                {activeInstitute.leiras}
+              <div className="instDetails">
+                <div className="instDesc">{activeInstitute.leiras}</div>
                 <Divider variant="middle" />
                 <h3>Intézmény helyszínei</h3>
-                <ul>
+                <ul style={{ textAlign: "left" }}>
                   {activeInstitute.intezmenyHelyszinek
                     .sort((a, b) => (a.nyitas > b.nyitas ? -1 : 1))
                     .map((place, index) => (
@@ -242,7 +244,10 @@ const Map = () => {
                     ))}
                 </ul>
                 {activeInstitute.intezmenyVezetok.length !== 0 && (
-                  <div className="instLeadersContainer">
+                  <div
+                    className="instLeadersContainer"
+                    style={{ textAlign: "left" }}
+                  >
                     <h3>Intézmény vezetői</h3>
                     <ul>
                       {activeInstitute.intezmenyVezetok
@@ -270,7 +275,10 @@ const Map = () => {
                   </div>
                 )}
                 {activeInstitute.esemenyek.length !== 0 && (
-                  <div className="instEventsContainer">
+                  <div
+                    className="instEventsContainer"
+                    style={{ textAlign: "left" }}
+                  >
                     <h3>Intézmény eseményei</h3>
                     <ul>
                       {activeInstitute.esemenyek
