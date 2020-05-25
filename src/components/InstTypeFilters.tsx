@@ -26,7 +26,7 @@ const InstFilter = (props) => {
     <div className="filterBlock">
       {labelList.map((element) => (
         <label className="filterInstType" key={element.id}>
-        <div>{element.label}</div>
+        <div className="filterLabel">{element.label}</div>
         {renderInstituteIcon(element.id, "instFilterIcon")}
         <Checkbox
           key={element.id}
