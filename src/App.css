@@ -108,6 +108,10 @@ body {
   position: fixed;
   bottom: 200px;
   z-index: 50;
+  max-width: 1600px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  transition: all 0.3s ease;
 }
 
 .timelineBlock {
@@ -117,12 +121,6 @@ body {
   justify-content: center;
   margin: 0px 26px;
   padding: 12px 0px;
-}
-
-@media screen and (max-width: 1300px) {
-  .timelineContainer {
-    bottom: 280px;
-  }
 }
 
 .timelineBlock > span {
@@ -185,4 +183,79 @@ body {
 .logoBlock > svg {
   height: 84px;
   width: auto;
+}
+
+@media screen and (min-width: 833px)and (max-width: 1300px) {
+  .timelineContainer {
+    bottom: 280px;
+  }
+}
+
+@media screen and (max-width: 832px) {
+  .timelineContainer {
+    bottom: 360px;
+  }
+}
+
+@media screen and (max-width: 685px) {
+  .filterBlock .filterInstType {
+    flex: 1 0 2%;
+    height: 40px;
+    max-width: 65px;
+  }
+  .filterLabel {
+    display: none;
+  }
+  .timelineContainer {
+    bottom: 145px;
+  }
+
+  .logoBlock {
+    display: none;
+  }
+  .searchBlock {
+    left: 65px;
+  }
+  .MuiFormControl-root.searchSelectForm {
+    width: 40%;
+  }
+  .MuiFormControl-root.MuiTextField-root {
+    width: 32%;
+  }
+}
+
+@media screen and (min-width: 554px) and (max-width: 660px) {
+  .filterBlock .filterInstType {
+    max-width: none;
+  }
+}
+
+@media screen and (min-width: 489px) and (max-width: 660px) {
+  .timelineContainer {
+    bottom: 205px;
+  }
+}
+
+@media screen and (max-width: 489px) {
+  .timelineContainer {
+    bottom: 205px;
+  }
+  .filterBlock .filterInstType {
+    max-width: 65px;
+  }
+}
+
+@media screen and (min-width: 375px) and (max-width: 450px) {
+  .timelineContainer {
+    bottom: 265px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .filterBlock .filterInstType {
+    display: none;
+  }
+  .timelineContainer {
+    bottom: 15px;
+  }
 }
