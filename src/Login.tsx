@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,6 +12,10 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import instance from "./api/api";
+import { appHistory } from ".";
+import { Snackbar } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 
 function Copyright() {
   var path = "";
@@ -52,6 +56,36 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [userName, setUserName] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [errorText, setErrorText] = React.useState("");
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    instance.post("/admin/login",{UserName: userName, Password: password})
+    .then(response => {
+      instance.defaults.headers.common['Authorization'] = `Bearer ${response.data}`;
+      appHistory.push("/admin")
+    })
+    .catch(error => {
+      setErrorText(error.response.data);
+      setOpen(true);
+    })
+  }
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    switch (event.currentTarget.name) {
+      case "email": {
+        setUserName(event.currentTarget.value);      
+        break;
+      }
+      case "password": {
+        setPassword(event.currentTarget.value);    
+        break;
+      }
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -61,19 +95,21 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Bejelentkezés
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={submitForm}>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Felhasználónév"
             name="email"
             autoComplete="email"
             autoFocus
+            value={userName}
+            onChange={handleChange}
           />
           <TextField
             variant="outlined"
@@ -81,14 +117,16 @@ export default function SignIn() {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Jelszó"
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={handleChange}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            label="Emlékezz rám"
           />
           <Button
             type="submit"
@@ -97,22 +135,15 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+            Bejelentkezés
+          </Button>          
         </form>
       </div>
+      <Snackbar open={open} autoHideDuration={4000} >
+        <Alert severity="error">
+          {errorText}
+        </Alert>
+      </Snackbar>
       <Box mt={8}>
         <Copyright />
       </Box>
