@@ -5,6 +5,7 @@ import { Route, Router, Redirect, Switch } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 import Admin from "./Admin";
 import SignIn from "./Login";
+import Edit from "./Edit"
 import { createBrowserHistory } from "history";
 
 export const appHistory = createBrowserHistory()
@@ -14,6 +15,7 @@ const routing = (
         <Switch>
             <Route exact path="/" component={Map} />
             <Route exact path="/admin" component={Admin} />
+            <Route path="/admin/edit/" component={Edit} />
             <Route exact path="/login" component={SignIn} />
             <Route render={() => <Redirect to={{pathname: "/"}} />} />
         </Switch>

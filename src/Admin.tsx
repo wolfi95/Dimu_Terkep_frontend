@@ -1,9 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component, ChangeEvent } from 'react'
 import instance from './api/api';
+import { IIntezmenyHeader } from './interfaces/InstituteInterfaces';
+import { TextField, Table, TableHead, TableRow, TableCell, TableBody, Button, Container } from '@material-ui/core';
+import { appHistory } from '.';
 
 interface IAdminPageState {
-    
+    Intezmenyek: IIntezmenyHeader [];
+    searchParam: string;
 }
+
+
 
 export class Admin extends Component<{},IAdminPageState> {
     /**
@@ -11,15 +17,87 @@ export class Admin extends Component<{},IAdminPageState> {
      */
     constructor({}) {
         super({});
-        this.state = {}
-        
+        this.state = {
+            Intezmenyek:[],
+            searchParam: ""
+        };
+
+        instance.defaults.headers.common['Authorization'] = localStorage.getItem("token");
+        instance.post("Intezmeny/intezmenyHeaders/")
+            .then(res => {
+                this.setState({Intezmenyek: res.data});
+            })
+    }
+
+    handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        switch (event.currentTarget.name) {
+          case "searchName": {
+            this.setState(
+                { searchParam: event.currentTarget.value },() =>
+                instance.post("Intezmeny/intezmenyHeaders?searchParam=" + this.state.searchParam)
+                .then(res => {
+                    this.setState({Intezmenyek: res.data});
+                })
+            );
+                 
+            break;
+          }
+        }
+    };
+
+    editIntezmeny = (id: string) => {
+        appHistory.push("/admin/edit/" + id);
     }
 
     render() {
         return (
-            <div>
-                Admin
-            </div>
+            <Container>
+                <h1>
+                    Intézmények szerkesztése
+                </h1>
+                <br/>
+                <TextField
+                className="editSearchText"
+                id="instSearch"
+                name="searchName"
+                type="search"
+                value={this.state.searchParam}
+                label= "Intézmény név"
+                variant="filled"
+                onChange={(event) => this.handleChange(event)}
+                />
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Intézmény név</TableCell>
+                            <TableCell >Alapítás</TableCell>
+                            <TableCell >Megszűnés</TableCell>
+                            <TableCell ></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {this.state.Intezmenyek.map((intezmeny) => (
+                                <TableRow key={intezmeny.nev}>
+                                    <TableCell >
+                                        {intezmeny.nev}
+                                    </TableCell>
+                                    <TableCell >
+                                        {intezmeny.alapitas}
+                                    </TableCell>
+                                    <TableCell >
+                                        {intezmeny.megszunes}
+                                    </TableCell>
+                                    <TableCell >
+                                        <Button className="editButton" onClick={() => this.editIntezmeny(intezmeny.intezmenyId)}>
+                                            &#9998;
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        )}
+                    </TableBody>
+                </Table>
+            </Container>
         )
     }
 }

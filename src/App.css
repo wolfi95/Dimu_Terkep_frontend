@@ -195,6 +195,27 @@ body {
   background: var(--main-bg-color);
 }
 
+.editButton > span{
+  font-size: 25px;
+}
+
+.editButtonsmall > span{
+  font-size: 15px;
+}
+
+.editSearchText {
+  margin: 15px !important;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.editGroup {
+  border: 1px solid grey;
+  border-radius: 10px;
+  padding: 30px;
+  margin-bottom: 45px;
+}
+
 @media screen and (min-width: 833px)and (max-width: 1300px) {
   .timelineContainer {
     bottom: 280px;

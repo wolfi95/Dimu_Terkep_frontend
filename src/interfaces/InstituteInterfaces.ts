@@ -10,6 +10,12 @@ export interface IIntezmeny {
   intezmenyVezetok: IIntezmenyVezeto[];
   esemenyek: IEsemeny[];
 }
+export interface IIntezmenyHeader {
+  nev: string;
+  alapitas: number;
+  megszunes: number;
+  intezmenyId: string;
+}
 
 interface IIntezmenyVezeto {
   nev: string;

@@ -66,6 +66,7 @@ export default function SignIn() {
     instance.post("/admin/login",{UserName: userName, Password: password})
     .then(response => {
       instance.defaults.headers.common['Authorization'] = `Bearer ${response.data}`;
+      localStorage.setItem("token", `Bearer ${response.data}`);
       appHistory.push("/admin")
     })
     .catch(error => {
