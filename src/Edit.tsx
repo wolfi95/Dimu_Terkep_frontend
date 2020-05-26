@@ -12,7 +12,7 @@ export class Edit extends Component<{},IEditPageState> {
     /**
      *
      */
-    constructor({}) {
+    constructor() {
         super({});
         var id = appHistory.location.pathname.split('/').pop();        
         this.state = {
