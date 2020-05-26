@@ -209,6 +209,16 @@ body {
   width: 100%;
 }
 
+.rowFlex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.bottomMargin {
+  margin-bottom: 20px;
+}
+
 .editGroup {
   border: 1px solid grey;
   border-radius: 10px;

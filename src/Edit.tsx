@@ -64,6 +64,11 @@ export class Edit extends Component<{},IEditPageState> {
 
     }
 
+    goBack = (e) => {
+        e.preventDefault();
+        appHistory.push('/admin');
+    }
+
     render() {
         return (
             <Container>
@@ -74,7 +79,7 @@ export class Edit extends Component<{},IEditPageState> {
                     {this.state.intezmeny.nev}
                 </h2>
 
-                <form onSubmit={this.submitForm}>
+                <form onSubmit={this.submitForm} className="bottomMargin">
                     <div className="editGroup">
                         <TextField                        
                             fullWidth={true}
@@ -237,12 +242,18 @@ export class Edit extends Component<{},IEditPageState> {
                         </Button>
                     </div>
                     
-                    <div>
+                    <div className="rowFlex ">
                         <Button 
                             color="primary"
                             variant="contained"
                             type="submit">  
                             Módosít
+                        </Button>
+                        <Button 
+                            color="primary"
+                            variant="contained"
+                            onClick={this.goBack}>  
+                            Mégse
                         </Button>
                     </div>
                 </form>

@@ -49,12 +49,22 @@ export class Admin extends Component<{},IAdminPageState> {
         appHistory.push("/admin/edit/" + id);
     }
 
+    logOut = () => {
+        localStorage.clear();
+        appHistory.push("/");
+    }
+
     render() {
         return (
             <Container>
-                <h1>
-                    Intézmények szerkesztése
-                </h1>
+                <div className="rowFlex">
+                    <h1>
+                        Intézmények szerkesztése
+                    </h1>
+                    <Button onClick={this.logOut}>
+                        Kijelentkezés
+                    </Button>
+                </div>
                 <br/>
                 <TextField
                 className="editSearchText"

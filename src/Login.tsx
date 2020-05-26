@@ -60,6 +60,11 @@ export default function SignIn() {
   const [password, setPassword] = React.useState("");
   const [errorText, setErrorText] = React.useState("");
 
+  const goBack = () => {
+    localStorage.clear();
+    appHistory.push("/");
+  }
+
   const submitForm = (e) => {
     e.preventDefault();
     instance.post("/admin/login",{UserName: userName, Password: password})
@@ -136,6 +141,15 @@ export default function SignIn() {
             className={classes.submit}
           >
             Bejelentkezés
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={goBack}
+          >
+            Vissza
           </Button>          
         </form>
       </div>
