@@ -15,7 +15,7 @@ export class Admin extends Component<{},IAdminPageState> {
     /**
      *
      */
-    constructor({}) {
+    constructor() {
         super({});
         this.state = {
             Intezmenyek:[],

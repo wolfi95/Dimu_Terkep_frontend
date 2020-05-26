@@ -3,7 +3,6 @@ import { Container, Button, TextField, Select, MenuItem, Table, TableHead, Table
 import { IIntezmeny } from "./interfaces/InstituteInterfaces";
 import { appHistory } from ".";
 import instance from "./api/api";
-import classes from "*.module.css";
 
 interface IEditPageState {
     intezmeny: IIntezmeny
