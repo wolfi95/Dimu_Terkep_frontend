@@ -3,7 +3,7 @@ import { Map as LeafletMap, TileLayer, Marker, Popup } from "react-leaflet";
 import axios from "./api/api";
 import { useWhatChanged } from "@simbathesailor/use-what-changed";
 import LinkIcon from "@material-ui/icons/Link";
-import { Grid, Link, Divider } from "@material-ui/core";
+import { Grid, Link, Divider, Button } from "@material-ui/core";
 import renderInstituteIcon from "./components/InstituteIcons";
 import "./App.css";
 import InstFilter from "./components/InstTypeFilters";
@@ -15,6 +15,7 @@ import { SearchType } from "./enums/enums";
 import { $enum } from "ts-enum-util";
 import { IPosition } from "./interfaces/PositionInterface";
 import ArtlasLogo from "./components/ArtlasLogo";
+import {appHistory} from "./index"
 
 const Map = () => {
   const initInstTypes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -74,6 +75,9 @@ const Map = () => {
       : [...instTypes, data];
     setActiveInstTypes(toggleArrayValue);
   };
+  const onLoginClick = () => {
+    appHistory.push('/login');
+  }
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -108,6 +112,11 @@ const Map = () => {
           onSearchTypeChange(searchType);
         }}
       />
+      <div className="loginButton">
+      <Button onClick={onLoginClick}>
+        Bejelentkezés
+      </Button>
+      </div>
       <Timeline
         currentDates={timelineVal}
         initialDates={borderDates}

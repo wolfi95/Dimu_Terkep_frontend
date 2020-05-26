@@ -1,14 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Map from "./Map";
-import { Route, BrowserRouter as Router, Redirect, Switch } from "react-router-dom";
+import { Route, Router, Redirect, Switch } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 import Admin from "./Admin";
 import SignIn from "./Login";
+import { createBrowserHistory } from "history";
 
+export const appHistory = createBrowserHistory()
 
 const routing = (
-    <Router>
+    <Router history = {appHistory}>
         <Switch>
             <Route exact path="/" component={Map} />
             <Route exact path="/admin" component={Admin} />
