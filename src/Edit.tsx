@@ -14,7 +14,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
 } from "@material-ui/core";
 import { IIntezmeny, IIntezmenyHelyszin } from "./interfaces/InstituteInterfaces";
@@ -23,7 +22,7 @@ import instance from "./api/api";
 
 interface IEditPageState {
     openHelyszinDialog: boolean;
-    editing: IIntezmenyHelyszin | null;
+    editingHelyszin: IIntezmenyHelyszin | null;
     editableHelyszin: IIntezmenyHelyszin | null;
     intezmeny: IIntezmeny;
 }
@@ -39,7 +38,7 @@ export class Edit extends Component<{}, IEditPageState> {
     this.state = {
       openHelyszinDialog:false,
       editableHelyszin: null,
-      editing: null,
+      editingHelyszin: null,
       intezmeny: {
         alapitas: 0,
         esemenyek: [],
@@ -168,17 +167,17 @@ export class Edit extends Component<{}, IEditPageState> {
       var helyszintemp = helyszin as IIntezmenyHelyszin  !== null ? helyszin : {helyszin:"",koltozes:0,latitude:0,longitude:0,nyitas:0}
     this.setState({openHelyszinDialog:true,editableHelyszin:helyszintemp},() => {
         if(helyszin !== null)
-        this.setState({editing: this.state.intezmeny.intezmenyHelyszinek.find(i => i.helyszin === this.state.editableHelyszin?.helyszin && i.nyitas === this.state.editableHelyszin?.nyitas) as IIntezmenyHelyszin});
+        this.setState({editingHelyszin: this.state.intezmeny.intezmenyHelyszinek.find(i => i.helyszin === this.state.editableHelyszin?.helyszin && i.nyitas === this.state.editableHelyszin?.nyitas) as IIntezmenyHelyszin});
     })
   };
 
   handleHelyszinClose = (edit:boolean) => {
       if(edit){
-        var temp = this.state.intezmeny.intezmenyHelyszinek.filter(i => i !== this.state.editing)
+        var temp = this.state.intezmeny.intezmenyHelyszinek.filter(i => i !== this.state.editingHelyszin)
         temp.push(this.state.editableHelyszin as IIntezmenyHelyszin);
         this.setState({intezmeny:{...this.state.intezmeny,intezmenyHelyszinek: temp}})
       }
-      this.setState({openHelyszinDialog:false,editing:null})
+      this.setState({openHelyszinDialog:false,editingHelyszin:null})
   }
 
   deleteHelyszin = (helyszin) => {
@@ -436,7 +435,7 @@ export class Edit extends Component<{}, IEditPageState> {
         </form>
 
         <Dialog open={this.state.openHelyszinDialog} onClose={this.handleHelyszinClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">{this.state.editing !== null ? "Helyszín módosítása" : "Új helyszín"}</DialogTitle>
+            <DialogTitle id="form-dialog-title">{this.state.editingHelyszin !== null ? "Helyszín módosítása" : "Új helyszín"}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -496,7 +495,7 @@ export class Edit extends Component<{}, IEditPageState> {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleHelyszinClose(true)} color="primary">
-            {this.state.editing !== null ? "Módosítása" : "Felvesz"}
+            {this.state.editingHelyszin !== null ? "Módosítása" : "Felvesz"}
           </Button>
           <Button onClick={() => this.handleHelyszinClose(false)} color="primary">
             Mégse
