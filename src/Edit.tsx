@@ -16,7 +16,7 @@ import {
   DialogContent,
   DialogActions
 } from "@material-ui/core";
-import { IIntezmeny, IIntezmenyHelyszin } from "./interfaces/InstituteInterfaces";
+import { IIntezmeny, IIntezmenyHelyszin, IEsemeny } from "./interfaces/InstituteInterfaces";
 import { appHistory } from ".";
 import instance from "./api/api";
 
@@ -24,6 +24,9 @@ interface IEditPageState {
     openHelyszinDialog: boolean;
     editingHelyszin: IIntezmenyHelyszin | null;
     editableHelyszin: IIntezmenyHelyszin | null;
+    openEsemenyDialog: boolean;
+    editingEsemeny: IEsemeny | null;
+    editableEsemeny: IEsemeny | null;
     intezmeny: IIntezmeny;
 }
 
@@ -39,6 +42,9 @@ export class Edit extends Component<{}, IEditPageState> {
       openHelyszinDialog:false,
       editableHelyszin: null,
       editingHelyszin: null,
+      openEsemenyDialog:false,
+      editableEsemeny: null,
+      editingEsemeny: null,
       intezmeny: {
         alapitas: 0,
         esemenyek: [],
@@ -156,6 +162,33 @@ export class Edit extends Component<{}, IEditPageState> {
         });
         break;
       }
+      case "editEsemenyNev": {
+        this.setState({
+         editableEsemeny:{
+            ...this.state.editableEsemeny as IEsemeny,
+            nev: event.currentTarget.value
+         } ,
+        });
+        break;
+      }
+      case "editEsemenyDatum": {
+        this.setState({
+         editableEsemeny:{
+            ...this.state.editableEsemeny as IEsemeny,
+            datum: event.currentTarget.value
+         } ,
+        });
+        break;
+      }
+      case "editEsemenySzervezo": {
+        this.setState({
+         editableEsemeny:{
+            ...this.state.editableEsemeny as IEsemeny,
+            szervezo: event.currentTarget.value
+         } ,
+        });
+        break;
+      }
     }
   };
 
@@ -204,7 +237,22 @@ export class Edit extends Component<{}, IEditPageState> {
 
   editIntezmenyVezeto = () => {};
 
-  editEsemeny = () => {};
+  editEsemeny = (esemeny) => {
+    var esemenytemp = esemeny as IEsemeny  !== null ? esemeny : { nev: "", datum: "", szervezo: ""}
+    this.setState({openEsemenyDialog:true,editableEsemeny:esemenytemp},() => {
+        if(esemeny !== null)
+        this.setState({editingEsemeny: this.state.intezmeny.esemenyek.find(i => i.nev === this.state.editableEsemeny?.nev && i.datum === this.state.editableEsemeny?.datum) as IEsemeny});
+    })
+    };
+
+    handleEsemenyClose = (edit:boolean) => {
+        if(edit){
+        var temp = this.state.intezmeny.esemenyek.filter(i => i !== this.state.editingEsemeny)
+        temp.push(this.state.editableEsemeny as IEsemeny);
+        this.setState({intezmeny:{...this.state.intezmeny,esemenyek: temp}})
+        }
+        this.setState({openEsemenyDialog:false,editingEsemeny:null})
+    }
 
   deleteEsemeny = (esemeny) => {
     var temp = this.state.intezmeny.esemenyek;
@@ -400,7 +448,7 @@ export class Edit extends Component<{}, IEditPageState> {
                       <TableCell>
                         <Button
                           className="editButton"
-                          onClick={() => this.editEsemeny()}
+                          onClick={() => this.editEsemeny(esemeny)}
                         >
                           &#9998;
                         </Button>
@@ -416,7 +464,7 @@ export class Edit extends Component<{}, IEditPageState> {
                 })}
               </TableBody>
             </Table>
-            <Button>&#10133; Hozzáad</Button>
+            <Button onClick={() => this.editEsemeny(null)}>&#10133; Hozzáad</Button>
           </div>
 
           <div className="rowFlex ">
@@ -495,9 +543,56 @@ export class Edit extends Component<{}, IEditPageState> {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleHelyszinClose(true)} color="primary">
-            {this.state.editingHelyszin !== null ? "Módosítása" : "Felvesz"}
+            {this.state.editingHelyszin !== null ? "Módosítás" : "Felvesz"}
           </Button>
           <Button onClick={() => this.handleHelyszinClose(false)} color="primary">
+            Mégse
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={this.state.openEsemenyDialog} onClose={this.handleEsemenyClose} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">{this.state.editingEsemeny !== null ? "Esemény módosítása" : "Új esemény"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Név"
+            type="text"
+            name="editEsemenyNev"
+            fullWidth
+            value={this.state.editableEsemeny?.nev}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Dátum"
+            type="text"
+            name="editEsemenyDatum"
+            fullWidth
+            value={this.state.editableEsemeny?.datum}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Szervezo"
+            type="text"
+            name="editEsemenySzervezo"
+            fullWidth
+            value={this.state.editableEsemeny?.szervezo}
+            onChange={this.handleChange}
+          />         
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleEsemenyClose(true)} color="primary">
+            {this.state.editingHelyszin !== null ? "Módosítás" : "Felvesz"}
+          </Button>
+          <Button onClick={() => this.handleEsemenyClose(false)} color="primary">
             Mégse
           </Button>
         </DialogActions>

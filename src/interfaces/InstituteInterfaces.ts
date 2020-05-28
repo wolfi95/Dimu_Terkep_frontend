@@ -23,7 +23,7 @@ interface IIntezmenyVezeto {
   ig: number;
 }
 
-interface IEsemeny {
+export interface IEsemeny {
   nev: string;
   datum: string;
   szervezo: string;
