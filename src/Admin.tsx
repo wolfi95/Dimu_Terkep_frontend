@@ -18,10 +18,16 @@ import {
 } from "@material-ui/core";
 import { appHistory } from ".";
 
+interface IDelteIntezmeny {
+    intezmenyId: string;
+    intezmenyNev: string;
+}
+
 interface IAdminPageState {
   Intezmenyek: IIntezmenyHeader[];
   searchParam: string;
   confirmDialogOpen: boolean;
+  toDelete: IDelteIntezmeny | null;
 }
 
 export class Admin extends Component<{}, IAdminPageState> {
@@ -33,7 +39,8 @@ export class Admin extends Component<{}, IAdminPageState> {
     this.state = {
       Intezmenyek: [],
       searchParam: "",
-      confirmDialogOpen: false
+      confirmDialogOpen: false,
+      toDelete: null
     };
 
     instance.defaults.headers.common["Authorization"] = localStorage.getItem(
@@ -68,8 +75,19 @@ export class Admin extends Component<{}, IAdminPageState> {
     appHistory.push("/admin/edit/" + id);
   };
 
-  deleteIntezmeny = (id: string) => {
-      instance.delete("/Intezmeny/" + id)
+  deleteIntezmeny = (id: string) => {       
+      instance.delete("/Intezmeny/" + id)    
+  }
+
+  handleOpen = (intezmeny) => {
+      this.setState({confirmDialogOpen:true,toDelete:{intezmenyId: intezmeny.intezmenyId, intezmenyNev: intezmeny.nev}})
+  }
+
+  handleClose = (confirm: boolean) => {
+     if(confirm){
+         this.deleteIntezmeny(this.state.toDelete?.intezmenyId as string);
+     }
+     this.setState({confirmDialogOpen:false, toDelete: null});
   }
 
   logOut = () => {
@@ -123,7 +141,7 @@ export class Admin extends Component<{}, IAdminPageState> {
                   </Button>
                   <Button
                     className="editButton"
-                    onClick={() => this.deleteIntezmeny(intezmeny.intezmenyId)}
+                    onClick={() => this.handleOpen(intezmeny)}
                   >
                     &#128465;
                   </Button>
@@ -140,14 +158,14 @@ export class Admin extends Component<{}, IAdminPageState> {
         <DialogTitle id="alert-dialog-title">{"Intézmény törlése"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Biztosan törli az intézményt?
+            Biztosan törli a(z) {this.state.toDelete?.intezmenyNev} intézményt?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button color="primary">
+          <Button onClick={() => this.handleClose(true)} color="primary">
             Igen
           </Button>
-          <Button color="primary" autoFocus>
+          <Button onClick={() => this.handleClose(false)} color="primary" autoFocus>
             Nem
           </Button>
         </DialogActions>
