@@ -14,7 +14,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
+  DialogActions
 } from "@material-ui/core";
 import { IIntezmeny, IIntezmenyHelyszin } from "./interfaces/InstituteInterfaces";
 import { appHistory } from ".";
