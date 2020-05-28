@@ -66,6 +66,9 @@ export class Admin extends Component<{},IAdminPageState> {
                     </Button>
                 </div>
                 <br/>
+                <Button variant="outlined">
+                        Új intézmény
+                </Button>
                 <TextField
                 className="editSearchText"
                 id="instSearch"

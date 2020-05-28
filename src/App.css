@@ -204,7 +204,7 @@ body {
 }
 
 .editSearchText {
-  margin: 15px !important;
+  margin-top: 20px !important;
   border-radius: 5px;
   width: 100%;
 }
