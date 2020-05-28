@@ -29,7 +29,7 @@ interface IEsemeny {
   szervezo: string;
 }
 
-interface IIntezmenyHelyszin {
+export interface IIntezmenyHelyszin {
   helyszin: string;
   nyitas: number;
   koltozes: number;

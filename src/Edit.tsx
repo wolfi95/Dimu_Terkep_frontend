@@ -11,13 +11,21 @@ import {
   TableRow,
   TableBody,
   InputLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@material-ui/core";
-import { IIntezmeny } from "./interfaces/InstituteInterfaces";
+import { IIntezmeny, IIntezmenyHelyszin } from "./interfaces/InstituteInterfaces";
 import { appHistory } from ".";
 import instance from "./api/api";
 
 interface IEditPageState {
-  intezmeny: IIntezmeny;
+    openDialog: boolean;
+    editing: IIntezmenyHelyszin | null;
+    editableHelyszin: IIntezmenyHelyszin | null;
+    intezmeny: IIntezmeny;
 }
 
 export class Edit extends Component<{}, IEditPageState> {
@@ -29,6 +37,9 @@ export class Edit extends Component<{}, IEditPageState> {
     instance.defaults.headers.common['Authorization'] = localStorage.getItem("token");
     var id = appHistory.location.pathname.split("/").pop();
     this.state = {
+      openDialog:false,
+      editableHelyszin: null,
+      editing: null,
       intezmeny: {
         alapitas: 0,
         esemenyek: [],
@@ -64,7 +75,6 @@ export class Edit extends Component<{}, IEditPageState> {
   handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    debugger;
     switch (event.currentTarget.name) {
       case "leiras": {
         this.setState({
@@ -102,6 +112,15 @@ export class Edit extends Component<{}, IEditPageState> {
         });
         break;
       }
+      case "editHelyszinCim": {
+        this.setState({
+         editableHelyszin:{
+            ...this.state.editableHelyszin as IIntezmenyHelyszin,
+            helyszin: event.currentTarget.value
+         } ,
+        });
+        break;
+      }
     }
   };
 
@@ -109,7 +128,20 @@ export class Edit extends Component<{}, IEditPageState> {
     e.preventDeafult();
   };
 
-  editHelyszin = () => {};
+  editHelyszin = (helyszin) => {
+    this.setState({openDialog:true,editableHelyszin:helyszin},() => {
+        this.setState({editing: this.state.intezmeny.intezmenyHelyszinek.find(i => i.helyszin === this.state.editableHelyszin?.helyszin && i.nyitas === this.state.editableHelyszin?.nyitas) as IIntezmenyHelyszin});
+    })
+  };
+
+  handleClose = (edit:boolean) => {
+      if(edit){
+        var temp = this.state.intezmeny.intezmenyHelyszinek.filter(i => i !== this.state.editing)
+        temp.push(this.state.editableHelyszin as IIntezmenyHelyszin);
+        this.setState({intezmeny:{...this.state.intezmeny,intezmenyHelyszinek: temp}})
+      }
+      this.setState({openDialog:false})
+  }
 
   deleteHelyszin = (helyszin) => {
     var temp = this.state.intezmeny.intezmenyHelyszinek;
@@ -153,7 +185,6 @@ export class Edit extends Component<{}, IEditPageState> {
     var id = appHistory.location.pathname.split("/").pop();
     instance.put("Intezmeny/" + id,this.state.intezmeny)
         .then(res => {
-            debugger;
             appHistory.push("/admin");
         });
   };
@@ -251,7 +282,7 @@ export class Edit extends Component<{}, IEditPageState> {
                       <TableCell>
                         <Button
                           className="editButton"
-                          onClick={() => this.editHelyszin()}
+                          onClick={() => this.editHelyszin(helyszin)}
                         >
                           &#9998;
                         </Button>
@@ -365,6 +396,31 @@ export class Edit extends Component<{}, IEditPageState> {
             </Button>
           </div>
         </form>
+
+        <Dialog open={this.state.openDialog} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Cím"
+            type="text"
+            name="editHelyszinCim"
+            fullWidth
+            value={this.state.editableHelyszin?.helyszin}
+            onChange={this.handleChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleClose(true)} color="primary">
+            Módosít
+          </Button>
+          <Button onClick={() => this.handleClose(false)} color="primary">
+            Mégse
+          </Button>
+        </DialogActions>
+      </Dialog>
       </Container>
     );
   }
