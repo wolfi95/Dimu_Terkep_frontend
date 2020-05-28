@@ -399,7 +399,7 @@ export class Edit extends Component<{}, IEditPageState> {
   render() {
     return (
       <Container>
-        <h1>Intézmény módosítása</h1>
+        <h1>{!this.state.new ? "Intézmény módosítása" : "Intézmény létrehozása"}</h1>
          {!this.state.new && <h2>{this.state.intezmeny.nev}</h2>}
 
         <form onSubmit={this.submitForm} className="bottomMargin">
@@ -622,7 +622,7 @@ export class Edit extends Component<{}, IEditPageState> {
           <DialogTitle id="form-dialog-title">
             {this.state.editingVezeto !== null
               ? "Intézményvezető módosítása"
-              : "Új intézményvezeto"}
+              : "Új intézményvezető"}
           </DialogTitle>
           <DialogContent>
             <TextField
