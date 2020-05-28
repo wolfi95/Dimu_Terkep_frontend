@@ -72,6 +72,10 @@ body {
   cursor: pointer;
 }
 
+.filterBlock .filterInstType .MuiIconButton-colorSecondary {
+  color: #333333;
+}
+
 .filterInstType .instFilterIcon {
   margin-left: -4px;
   margin-right: 5px;
@@ -300,3 +304,4 @@ body {
     bottom: 15px;
   }
 }
+
