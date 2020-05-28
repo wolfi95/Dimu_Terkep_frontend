@@ -26,6 +26,7 @@ export class Edit extends Component<{}, IEditPageState> {
    */
   constructor(props: IEditPageState) {
     super(props);
+    instance.defaults.headers.common['Authorization'] = localStorage.getItem("token");
     var id = appHistory.location.pathname.split("/").pop();
     this.state = {
       intezmeny: {
@@ -51,13 +52,54 @@ export class Edit extends Component<{}, IEditPageState> {
     });
   }
 
+  changeType = (event: React.ChangeEvent<{ value: unknown }>) => {
+    this.setState({
+      intezmeny: {
+        ...this.state.intezmeny,
+        tipus: event.target.value as number,
+      },
+    });
+  };
+
   handleChange = (
-    event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | { value: unknown; name?: string }
-    >
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    debugger;
     switch (event.currentTarget.name) {
-      case "email": {
+      case "leiras": {
+        this.setState({
+          intezmeny: {
+            ...this.state.intezmeny,
+            leiras: event.currentTarget.value as string,
+          },
+        });
+        break;
+      }
+      case "alapitas": {
+        this.setState({
+          intezmeny: {
+            ...this.state.intezmeny,
+            alapitas: +event.currentTarget.value,
+          },
+        });
+        break;
+      }
+      case "megszunes": {
+        this.setState({
+          intezmeny: {
+            ...this.state.intezmeny,
+            megszunes: +event.currentTarget.value,
+          },
+        });
+        break;
+      }
+      case "link": {
+        this.setState({
+          intezmeny: {
+            ...this.state.intezmeny,
+            link: event.currentTarget.value as string,
+          },
+        });
         break;
       }
     }
@@ -69,9 +111,52 @@ export class Edit extends Component<{}, IEditPageState> {
 
   editHelyszin = () => {};
 
+  deleteHelyszin = (helyszin) => {
+    var temp = this.state.intezmeny.intezmenyHelyszinek;
+    temp = temp.filter((i) => i !== helyszin);
+    this.setState({
+      intezmeny: {
+        ...this.state.intezmeny,
+        intezmenyHelyszinek: temp,
+      },
+    });
+  };
+
+  deleteVezeto = (vezeto) => {
+    var temp = this.state.intezmeny.intezmenyVezetok;
+    temp = temp.filter((i) => i !== vezeto);
+    this.setState({
+      intezmeny: {
+        ...this.state.intezmeny,
+        intezmenyVezetok: temp,
+      },
+    });
+  };
+
   editIntezmenyVezeto = () => {};
 
   editEsemeny = () => {};
+
+  deleteEsemeny = (esemeny) => {
+    var temp = this.state.intezmeny.esemenyek;
+    temp = temp.filter((i) => i !== esemeny);
+    this.setState({
+      intezmeny: {
+        ...this.state.intezmeny,
+        esemenyek: temp,
+      },
+    });
+  };
+
+  postIntezmeny = (e) => {
+    e.preventDefault();
+    var id = appHistory.location.pathname.split("/").pop();
+    instance.put("Intezmeny/" + id,this.state.intezmeny)
+        .then(res => {
+            debugger;
+            appHistory.push("/admin");
+        });
+  };
 
   goBack = (e) => {
     e.preventDefault();
@@ -128,12 +213,8 @@ export class Edit extends Component<{}, IEditPageState> {
             <Select
               name="tipus"
               label="Intézmény típusa"
-              value={
-                this.state.intezmeny.tipus === -1
-                  ? ""
-                  : this.state.intezmeny.tipus
-              }
-              onChange={this.handleChange}
+              value={this.state.intezmeny.tipus}
+              onChange={this.changeType}
             >
               <MenuItem value={0}>Állami múzeum</MenuItem>
               <MenuItem value={1}>Állami kulturális központ</MenuItem>
@@ -174,7 +255,12 @@ export class Edit extends Component<{}, IEditPageState> {
                         >
                           &#9998;
                         </Button>
-                        <Button className="editButton">&#128465;</Button>
+                        <Button
+                          className="editButton"
+                          onClick={() => this.deleteHelyszin(helyszin)}
+                        >
+                          &#128465;
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -184,7 +270,7 @@ export class Edit extends Component<{}, IEditPageState> {
             <Button>&#10133; Hozzáad</Button>
           </div>
           <div className="editGroup">
-            <InputLabel>Művészek</InputLabel>
+            <InputLabel>Intézményvezetők</InputLabel>
             <Table size="small" aria-label="a dense table">
               <TableHead>
                 <TableRow>
@@ -209,7 +295,12 @@ export class Edit extends Component<{}, IEditPageState> {
                           >
                             &#9998;
                           </Button>
-                          <Button className="editButton">&#128465;</Button>
+                          <Button
+                            className="editButton"
+                            onClick={() => this.deleteVezeto(intezmenyVezeto)}
+                          >
+                            &#128465;
+                          </Button>
                         </TableCell>
                       </TableRow>
                     );
@@ -245,7 +336,12 @@ export class Edit extends Component<{}, IEditPageState> {
                         >
                           &#9998;
                         </Button>
-                        <Button className="editButton">&#128465;</Button>
+                        <Button
+                          className="editButton"
+                          onClick={() => this.deleteEsemeny(esemeny)}
+                        >
+                          &#128465;
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -256,7 +352,12 @@ export class Edit extends Component<{}, IEditPageState> {
           </div>
 
           <div className="rowFlex ">
-            <Button color="primary" variant="contained" type="submit">
+            <Button
+              color="primary"
+              variant="contained"
+              type="submit"
+              onClick={this.postIntezmeny}
+            >
               Módosít
             </Button>
             <Button color="primary" variant="contained" onClick={this.goBack}>
