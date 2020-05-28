@@ -16,6 +16,7 @@ import { appHistory } from ".";
 interface IAdminPageState {
   Intezmenyek: IIntezmenyHeader[];
   searchParam: string;
+  confirmDeleteOpen: boolean;
 }
 
 export class Admin extends Component<{}, IAdminPageState> {
@@ -27,6 +28,7 @@ export class Admin extends Component<{}, IAdminPageState> {
     this.state = {
       Intezmenyek: [],
       searchParam: "",
+      confirmDeleteOpen: false 
     };
 
     instance.defaults.headers.common["Authorization"] = localStorage.getItem(
@@ -60,6 +62,10 @@ export class Admin extends Component<{}, IAdminPageState> {
   editIntezmeny = (id: string) => {
     appHistory.push("/admin/edit/" + id);
   };
+
+  deleteIntezmeny = (id: string) => {
+      instance.delete("/Intezmeny/" + id)
+  }
 
   logOut = () => {
     localStorage.clear();
@@ -109,6 +115,12 @@ export class Admin extends Component<{}, IAdminPageState> {
                     onClick={() => this.editIntezmeny(intezmeny.intezmenyId)}
                   >
                     &#9998;
+                  </Button>
+                  <Button
+                    className="editButton"
+                    onClick={() => this.deleteIntezmeny(intezmeny.intezmenyId)}
+                  >
+                    &#128465;
                   </Button>
                 </TableCell>
               </TableRow>
