@@ -14,8 +14,8 @@ const routing = (
     <Router history = {appHistory}>
         <Switch>
             <Route exact path="/" component={Map} />
-            <Route exact path="/admin" component={Admin} />
-            <Route path="/admin/edit/" component={Edit} />
+            <Route exact path="/admin" render={() => isLoggedIn() ? <Admin/> : <SignIn/>}/>
+            <Route path="/admin/edit/" render={() => isLoggedIn() ? <Edit/> : <SignIn/>}/>
             <Route exact path="/login" component={SignIn} />
             <Route render={() => <Redirect to={{pathname: "/"}} />} />
         </Switch>
@@ -23,19 +23,16 @@ const routing = (
 );
 
 ReactDOM.render(routing, document.getElementById("root"));
-
-// const loggedIn = () => {
-//     // ...
-//   }
   
 
-// function requireAuth(nextState, replace) {
-//     if (!loggedIn()) {
-//       replace({
-//         pathname: '/login'
-//       })
-//     }
-//   }
+function isLoggedIn() {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 
 // If you want your app to work offline and load faster, you can change
