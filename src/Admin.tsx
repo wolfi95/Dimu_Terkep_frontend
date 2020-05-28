@@ -10,12 +10,18 @@ import {
   TableBody,
   Button,
   Container,
+  DialogTitle,
+  DialogContent,
+  Dialog,
+  DialogContentText,
+  DialogActions,
 } from "@material-ui/core";
 import { appHistory } from ".";
 
 interface IAdminPageState {
   Intezmenyek: IIntezmenyHeader[];
   searchParam: string;
+  confirmDialogOpen: boolean;
 }
 
 export class Admin extends Component<{}, IAdminPageState> {
@@ -27,6 +33,7 @@ export class Admin extends Component<{}, IAdminPageState> {
     this.state = {
       Intezmenyek: [],
       searchParam: "",
+      confirmDialogOpen: false
     };
 
     instance.defaults.headers.common["Authorization"] = localStorage.getItem(
@@ -115,6 +122,26 @@ export class Admin extends Component<{}, IAdminPageState> {
             ))}
           </TableBody>
         </Table>
+        <Dialog
+        open={this.state.confirmDialogOpen}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Intézmény törlése"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Biztosan törli az intézményt?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary">
+            Igen
+          </Button>
+          <Button color="primary" autoFocus>
+            Nem
+          </Button>
+        </DialogActions>
+      </Dialog>
       </Container>
     );
   }
