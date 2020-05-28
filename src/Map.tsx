@@ -16,6 +16,7 @@ import { $enum } from "ts-enum-util";
 import { IPosition } from "./interfaces/PositionInterface";
 import ArtlasLogo from "./components/ArtlasLogo";
 import {appHistory} from "./index"
+import renderMarker from "./components/InstituteMarkers";
 
 const Map = () => {
   const initInstTypes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -84,6 +85,7 @@ const Map = () => {
     localStorage.setItem("token", "");
     setLoggedIn(false);
   }
+
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -166,6 +168,7 @@ const Map = () => {
 
         {pins.map((institute, index) => (
           <Marker
+            icon={renderMarker(institute["intezmenyTipus"])}
             key={index}
             position={[institute["latitude"], institute["longitude"]]}
             onClick={async () => {
