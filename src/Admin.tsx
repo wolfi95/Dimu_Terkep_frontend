@@ -63,8 +63,13 @@ export class Admin extends Component<{}, IAdminPageState> {
     appHistory.push("/admin/edit/" + id);
   };
 
-  deleteIntezmeny = (id: string) => {
-      instance.delete("/Intezmeny/" + id)
+  deleteIntezmeny = (id: string, index) => {
+    instance.delete("/Intezmeny/" + id)
+    let arr = [...this.state.Intezmenyek]
+    if (index !== -1) {
+        arr.splice(index, 1);
+        this.setState({Intezmenyek: arr})
+    }
   }
 
   logOut = () => {
@@ -104,7 +109,7 @@ export class Admin extends Component<{}, IAdminPageState> {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.Intezmenyek.map((intezmeny) => (
+            {this.state.Intezmenyek.map((intezmeny, index) => (
               <TableRow key={intezmeny.nev}>
                 <TableCell>{intezmeny.nev}</TableCell>
                 <TableCell>{intezmeny.alapitas}</TableCell>
@@ -118,7 +123,7 @@ export class Admin extends Component<{}, IAdminPageState> {
                   </Button>
                   <Button
                     className="editButton"
-                    onClick={() => this.deleteIntezmeny(intezmeny.intezmenyId)}
+                    onClick={() => this.deleteIntezmeny(intezmeny.intezmenyId, index)}
                   >
                     &#128465;
                   </Button>
