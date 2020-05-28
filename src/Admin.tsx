@@ -10,13 +10,25 @@ import {
   TableBody,
   Button,
   Container,
+  DialogTitle,
+  DialogContent,
+  Dialog,
+  DialogContentText,
+  DialogActions,
 } from "@material-ui/core";
 import { appHistory } from ".";
+
+interface IDelteIntezmeny {
+    intezmenyId: string;
+    intezmenyNev: string;
+    index: number;
+}
 
 interface IAdminPageState {
   Intezmenyek: IIntezmenyHeader[];
   searchParam: string;
-  confirmDeleteOpen: boolean;
+  confirmDialogOpen: boolean;
+  toDelete: IDelteIntezmeny | null;
 }
 
 export class Admin extends Component<{}, IAdminPageState> {
@@ -28,7 +40,8 @@ export class Admin extends Component<{}, IAdminPageState> {
     this.state = {
       Intezmenyek: [],
       searchParam: "",
-      confirmDeleteOpen: false 
+      confirmDialogOpen: false,
+      toDelete: null
     };
 
     instance.defaults.headers.common["Authorization"] = localStorage.getItem(
@@ -63,13 +76,26 @@ export class Admin extends Component<{}, IAdminPageState> {
     appHistory.push("/admin/edit/" + id);
   };
 
-  deleteIntezmeny = (id: string, index) => {
-    instance.delete("/Intezmeny/" + id)
-    let arr = [...this.state.Intezmenyek]
-    if (index !== -1) {
-        arr.splice(index, 1);
-        this.setState({Intezmenyek: arr})
-    }
+  deleteIntezmeny = (id: string, index) => {       
+      instance.delete("/Intezmeny/" + id)
+      .then(res => {
+        let arr = [...this.state.Intezmenyek]
+        if (index !== -1) {
+            arr.splice(index, 1);
+            this.setState({Intezmenyek: arr})
+        } 
+      })  
+  }
+
+  handleOpen = (intezmeny, index) => {
+      this.setState({confirmDialogOpen:true,toDelete:{intezmenyId: intezmeny.intezmenyId, intezmenyNev: intezmeny.nev, index}})
+  }
+
+  handleClose = (confirm: boolean) => {
+     if(confirm){
+         this.deleteIntezmeny(this.state.toDelete?.intezmenyId as string, this.state.toDelete?.index);
+     }
+     this.setState({confirmDialogOpen:false, toDelete: null});
   }
 
   logOut = () => {
@@ -123,7 +149,7 @@ export class Admin extends Component<{}, IAdminPageState> {
                   </Button>
                   <Button
                     className="editButton"
-                    onClick={() => this.deleteIntezmeny(intezmeny.intezmenyId, index)}
+                    onClick={() => this.handleOpen(intezmeny, index)}
                   >
                     &#128465;
                   </Button>
@@ -132,6 +158,26 @@ export class Admin extends Component<{}, IAdminPageState> {
             ))}
           </TableBody>
         </Table>
+        <Dialog
+        open={this.state.confirmDialogOpen}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Intézmény törlése"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Biztosan törli a(z) {this.state.toDelete?.intezmenyNev} intézményt?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleClose(true)} color="primary">
+            Igen
+          </Button>
+          <Button onClick={() => this.handleClose(false)} color="primary" autoFocus>
+            Nem
+          </Button>
+        </DialogActions>
+      </Dialog>
       </Container>
     );
   }
