@@ -141,6 +141,14 @@ body {
   overflow: scroll;
 }
 
+.leaflet-popup-content-wrapper h2 {
+  letter-spacing: 1.3px;
+}
+
+.leaflet-popup-content-wrapper h3 {
+  letter-spacing: 1px;
+}
+
 .instDetails {
   font-size: 1.1em;
 }
@@ -309,3 +317,16 @@ body {
   }
 }
 
+/* ADMIN Page */
+
+.MuiTable-root {
+  margin-top: 40px
+}
+
+
+.MuiTableCell-root.MuiTableCell-head {
+  font-weight: bold;
+  letter-spacing: 1.3px;
+  background-color: #f1f1f1;
+  border-bottom: 1px solid;
+}

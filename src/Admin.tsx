@@ -84,7 +84,7 @@ export class Admin extends Component<{}, IAdminPageState> {
           name="searchName"
           type="search"
           value={this.state.searchParam}
-          label="Intézmény név"
+          label="Keresés intézmény név alapján"
           variant="filled"
           onChange={(event) => this.handleChange(event)}
         />
