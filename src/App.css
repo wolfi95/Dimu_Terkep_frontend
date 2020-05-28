@@ -219,6 +219,10 @@ body {
   justify-content: space-between;
 }
 
+.menuButtons {
+  width: 230px;
+}
+
 .bottomMargin {
   margin-bottom: 20px;
 }

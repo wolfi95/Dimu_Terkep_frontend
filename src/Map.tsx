@@ -15,7 +15,7 @@ import { SearchType } from "./enums/enums";
 import { $enum } from "ts-enum-util";
 import { IPosition } from "./interfaces/PositionInterface";
 import ArtlasLogo from "./components/ArtlasLogo";
-import {appHistory} from "./index"
+import { appHistory } from "./index";
 import renderMarker from "./components/InstituteMarkers";
 
 const Map = () => {
@@ -78,18 +78,16 @@ const Map = () => {
     setActiveInstTypes(toggleArrayValue);
   };
   const onLoginClick = () => {
-    appHistory.push('/login');
-  }
-
-  const onLogoutClick = () => {
-    localStorage.setItem("token", "");
-    setLoggedIn(false);
-  }
-
+    appHistory.push("/login");
+  };
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoggedIn(
+          localStorage.getItem("token") !== "" &&
+            localStorage.getItem("token") !== null
+        );
         const result = await axios.post("/Intezmeny", {
           [searchType]: searchVal,
           mukodestol: timelineVal[0],
@@ -97,7 +95,6 @@ const Map = () => {
           intezmenyTipus: instTypes,
         });
         setPins(result.data);
-        setLoggedIn(localStorage.getItem("token") !== "" && localStorage.getItem("token") !== null)
       } catch (error) {
         console.log(error);
         setAlertOpen(true);
@@ -107,7 +104,7 @@ const Map = () => {
     fetchData();
   }, [instTypes, searchVal, timelineVal, searchType]);
 
-  useWhatChanged([pins, activeInstitute, instTypes, searchVal, timelineVal]);  
+  useWhatChanged([pins, activeInstitute, instTypes, searchVal, timelineVal]);
 
   return (
     <React.Fragment>
@@ -122,23 +119,15 @@ const Map = () => {
           onSearchTypeChange(searchType);
         }}
       />
-      {
-        loggedIn
-        ? (
-          <div className="loginButton">
-            <Button onClick={onLogoutClick}>
-              Kijelentkezés
-            </Button>
-          </div>
-        ) 
-        : (
-          <div className="loginButton">
-            <Button onClick={onLoginClick}>
-              Bejelentkezés
-            </Button>
-          </div>
-        )
-      }      
+      {loggedIn ? (
+        <div className="loginButton">
+          <Button onClick={() => appHistory.push("/admin")}>Admin</Button>
+        </div>
+      ) : (
+        <div className="loginButton">
+          <Button onClick={onLoginClick}>Bejelentkezés</Button>
+        </div>
+      )}
       <Timeline
         currentDates={timelineVal}
         initialDates={borderDates}
