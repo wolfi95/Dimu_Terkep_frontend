@@ -68,7 +68,7 @@ export class Edit extends Component<{}, IEditPageState> {
         tipus: 0,
       },
     };
-    if (id != ""){
+    if (id !== ""){
       instance.get<IIntezmeny>("/Intezmeny/" + id).then((res) => {
         this.setState({
           intezmeny: {
@@ -380,7 +380,7 @@ export class Edit extends Component<{}, IEditPageState> {
   postIntezmeny = (e) => {
     e.preventDefault();
     var id = appHistory.location.pathname.split("/").pop();
-    if (id != "") {
+    if (id !== "") {
       instance.put("Intezmeny/" + id, this.state.intezmeny).then((res) => {
         appHistory.push("/admin");
       });
