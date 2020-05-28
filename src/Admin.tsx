@@ -21,6 +21,7 @@ import { appHistory } from ".";
 interface IDelteIntezmeny {
     intezmenyId: string;
     intezmenyNev: string;
+    index: number;
 }
 
 interface IAdminPageState {
@@ -75,17 +76,24 @@ export class Admin extends Component<{}, IAdminPageState> {
     appHistory.push("/admin/edit/" + id);
   };
 
-  deleteIntezmeny = (id: string) => {       
-      instance.delete("/Intezmeny/" + id)    
+  deleteIntezmeny = (id: string, index) => {       
+      instance.delete("/Intezmeny/" + id)
+      .then(res => {
+        let arr = [...this.state.Intezmenyek]
+        if (index !== -1) {
+            arr.splice(index, 1);
+            this.setState({Intezmenyek: arr})
+        } 
+      })  
   }
 
-  handleOpen = (intezmeny) => {
-      this.setState({confirmDialogOpen:true,toDelete:{intezmenyId: intezmeny.intezmenyId, intezmenyNev: intezmeny.nev}})
+  handleOpen = (intezmeny, index) => {
+      this.setState({confirmDialogOpen:true,toDelete:{intezmenyId: intezmeny.intezmenyId, intezmenyNev: intezmeny.nev, index}})
   }
 
   handleClose = (confirm: boolean) => {
      if(confirm){
-         this.deleteIntezmeny(this.state.toDelete?.intezmenyId as string);
+         this.deleteIntezmeny(this.state.toDelete?.intezmenyId as string, this.state.toDelete?.index);
      }
      this.setState({confirmDialogOpen:false, toDelete: null});
   }
@@ -127,7 +135,7 @@ export class Admin extends Component<{}, IAdminPageState> {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.state.Intezmenyek.map((intezmeny) => (
+            {this.state.Intezmenyek.map((intezmeny, index) => (
               <TableRow key={intezmeny.nev}>
                 <TableCell>{intezmeny.nev}</TableCell>
                 <TableCell>{intezmeny.alapitas}</TableCell>
@@ -141,7 +149,7 @@ export class Admin extends Component<{}, IAdminPageState> {
                   </Button>
                   <Button
                     className="editButton"
-                    onClick={() => this.handleOpen(intezmeny)}
+                    onClick={() => this.handleOpen(intezmeny, index)}
                   >
                     &#128465;
                   </Button>
