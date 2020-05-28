@@ -139,7 +139,7 @@ export class Admin extends Component<{}, IAdminPageState> {
               <TableRow key={intezmeny.nev}>
                 <TableCell>{intezmeny.nev}</TableCell>
                 <TableCell>{intezmeny.alapitas}</TableCell>
-                <TableCell>{intezmeny.megszunes}</TableCell>
+                <TableCell>{intezmeny.megszunes !== 0 ? intezmeny.megszunes : null}</TableCell>
                 <TableCell>
                   <Button
                     className="editButton"

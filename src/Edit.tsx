@@ -399,7 +399,7 @@ export class Edit extends Component<{}, IEditPageState> {
   render() {
     return (
       <Container>
-        <h1>Intézmény módosítása</h1>
+        <h1>Intézmény {this.state.new ? "létrehozása" : "módosítása"}</h1>
          {!this.state.new && <h2>{this.state.intezmeny.nev}</h2>}
 
         <form onSubmit={this.submitForm} className="bottomMargin">
@@ -489,7 +489,7 @@ export class Edit extends Component<{}, IEditPageState> {
                     <TableRow key={helyszin.helyszin + helyszin.nyitas}>
                       <TableCell>{helyszin.helyszin}</TableCell>
                       <TableCell>{helyszin.nyitas}</TableCell>
-                      <TableCell>{helyszin.koltozes}</TableCell>
+                      <TableCell>{helyszin.koltozes !== 0 ? helyszin.nyitas : null}</TableCell>
                       <TableCell>
                         <Button
                           className="editButton"
@@ -531,7 +531,7 @@ export class Edit extends Component<{}, IEditPageState> {
                       <TableRow key={intezmenyVezeto.nev + intezmenyVezeto.tol}>
                         <TableCell>{intezmenyVezeto.nev}</TableCell>
                         <TableCell>{intezmenyVezeto.tol}</TableCell>
-                        <TableCell>{intezmenyVezeto.ig}</TableCell>
+                        <TableCell>{intezmenyVezeto.ig !== 0 ? intezmenyVezeto.ig : null}</TableCell>
                         <TableCell>
                           <Button
                             className="editButton"
@@ -606,7 +606,7 @@ export class Edit extends Component<{}, IEditPageState> {
               type="submit"
               onClick={this.postIntezmeny}
             >
-              Módosít
+              {this.state.new ? "Felvesz" : "Módosít"}
             </Button>
             <Button color="primary" variant="contained" onClick={this.goBack}>
               Mégse
