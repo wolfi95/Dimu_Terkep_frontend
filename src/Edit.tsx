@@ -16,23 +16,21 @@ import {
   DialogContent,
   DialogActions,
 } from "@material-ui/core";
-import {
-  IIntezmeny,
-  IIntezmenyHelyszin,
-  IIntezmenyVezeto
-} from "./interfaces/InstituteInterfaces";
+import { IIntezmeny, IIntezmenyHelyszin, IEsemeny, IIntezmenyVezeto } from "./interfaces/InstituteInterfaces";
 import { appHistory } from ".";
 import instance from "./api/api";
 
 interface IEditPageState {
-  openHelyszinDialog: boolean;
-  editingHelyszin: IIntezmenyHelyszin | null;
-  editableHelyszin: IIntezmenyHelyszin | null;
-  openVezetoDialog: boolean;
-  editableVezeto: IIntezmenyVezeto | null;
-  editingVezeto: IIntezmenyVezeto | null;
-
-  intezmeny: IIntezmeny;
+    intezmeny: IIntezmeny;
+    openHelyszinDialog: boolean;
+    editingHelyszin: IIntezmenyHelyszin | null;
+    editableHelyszin: IIntezmenyHelyszin | null;
+    openEsemenyDialog: boolean;
+    editingEsemeny: IEsemeny | null;
+    editableEsemeny: IEsemeny | null;
+    openVezetoDialog: boolean;
+    editableVezeto: IIntezmenyVezeto | null;
+    editingVezeto: IIntezmenyVezeto | null;
 }
 
 export class Edit extends Component<{}, IEditPageState> {
@@ -52,6 +50,9 @@ export class Edit extends Component<{}, IEditPageState> {
       openVezetoDialog: false,
       editingVezeto: null,
       editableVezeto: null,
+      openEsemenyDialog:false,
+      editableEsemeny: null,
+      editingEsemeny: null,
       intezmeny: {
         alapitas: 0,
         esemenyek: [],
@@ -196,6 +197,33 @@ export class Edit extends Component<{}, IEditPageState> {
         });
         break;
       }
+      case "editEsemenyNev": {
+        this.setState({
+         editableEsemeny:{
+            ...this.state.editableEsemeny as IEsemeny,
+            nev: event.currentTarget.value
+         } ,
+        });
+        break;
+      }
+      case "editEsemenyDatum": {
+        this.setState({
+         editableEsemeny:{
+            ...this.state.editableEsemeny as IEsemeny,
+            datum: event.currentTarget.value
+         } ,
+        });
+        break;
+      }
+      case "editEsemenySzervezo": {
+        this.setState({
+         editableEsemeny:{
+            ...this.state.editableEsemeny as IEsemeny,
+            szervezo: event.currentTarget.value
+         } ,
+        });
+        break;
+      }
     }
   };
 
@@ -292,7 +320,22 @@ export class Edit extends Component<{}, IEditPageState> {
     );
   };
 
-  editEsemeny = () => {};
+  editEsemeny = (esemeny) => {
+    var esemenytemp = esemeny as IEsemeny  !== null ? esemeny : { nev: "", datum: "", szervezo: ""}
+    this.setState({openEsemenyDialog:true,editableEsemeny:esemenytemp},() => {
+        if(esemeny !== null)
+        this.setState({editingEsemeny: this.state.intezmeny.esemenyek.find(i => i.nev === this.state.editableEsemeny?.nev && i.datum === this.state.editableEsemeny?.datum) as IEsemeny});
+    })
+    };
+
+    handleEsemenyClose = (edit:boolean) => {
+        if(edit){
+        var temp = this.state.intezmeny.esemenyek.filter(i => i !== this.state.editingEsemeny)
+        temp.push(this.state.editableEsemeny as IEsemeny);
+        this.setState({intezmeny:{...this.state.intezmeny,esemenyek: temp}})
+        }
+        this.setState({openEsemenyDialog:false,editingEsemeny:null})
+    }
 
   deleteEsemeny = (esemeny) => {
     var temp = this.state.intezmeny.esemenyek;
@@ -491,7 +534,7 @@ export class Edit extends Component<{}, IEditPageState> {
                       <TableCell>
                         <Button
                           className="editButton"
-                          onClick={() => this.editEsemeny()}
+                          onClick={() => this.editEsemeny(esemeny)}
                         >
                           &#9998;
                         </Button>
@@ -507,7 +550,7 @@ export class Edit extends Component<{}, IEditPageState> {
                 })}
               </TableBody>
             </Table>
-            <Button>&#10133; Hozzáad</Button>
+            <Button onClick={() => this.editEsemeny(null)}>&#10133; Hozzáad</Button>
           </div>
 
           <div className="rowFlex ">
@@ -668,6 +711,121 @@ export class Edit extends Component<{}, IEditPageState> {
             </Button>
           </DialogActions>
         </Dialog>
+        <Dialog open={this.state.openHelyszinDialog} onClose={this.handleHelyszinClose} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">{this.state.editingHelyszin !== null ? "Helyszín módosítása" : "Új helyszín"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Cím"
+            type="text"
+            name="editHelyszinCim"
+            fullWidth
+            value={this.state.editableHelyszin?.helyszin}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Nyitás"
+            type="number"
+            name="editHelyszinNyitas"
+            fullWidth
+            value={this.state.editableHelyszin?.nyitas}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Költözés"
+            type="number"
+            name="editHelyszinKoltozes"
+            fullWidth
+            value={this.state.editableHelyszin?.koltozes}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Latitude"
+            type="number"
+            name="editHelyszinLat"
+            fullWidth
+            value={this.state.editableHelyszin?.latitude}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Longitude"
+            type="number"
+            name="editHelyszinLong"
+            fullWidth
+            value={this.state.editableHelyszin?.longitude}
+            onChange={this.handleChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleHelyszinClose(true)} color="primary">
+            {this.state.editingHelyszin !== null ? "Módosítás" : "Felvesz"}
+          </Button>
+          <Button onClick={() => this.handleHelyszinClose(false)} color="primary">
+            Mégse
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={this.state.openEsemenyDialog} onClose={this.handleEsemenyClose} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">{this.state.editingEsemeny !== null ? "Esemény módosítása" : "Új esemény"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Név"
+            type="text"
+            name="editEsemenyNev"
+            fullWidth
+            value={this.state.editableEsemeny?.nev}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Dátum"
+            type="text"
+            name="editEsemenyDatum"
+            fullWidth
+            value={this.state.editableEsemeny?.datum}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Szervezo"
+            type="text"
+            name="editEsemenySzervezo"
+            fullWidth
+            value={this.state.editableEsemeny?.szervezo}
+            onChange={this.handleChange}
+          />         
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleEsemenyClose(true)} color="primary">
+            {this.state.editingHelyszin !== null ? "Módosítás" : "Felvesz"}
+          </Button>
+          <Button onClick={() => this.handleEsemenyClose(false)} color="primary">
+            Mégse
+          </Button>
+        </DialogActions>
+      </Dialog>
       </Container>
     );
   }
