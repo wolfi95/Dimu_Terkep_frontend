@@ -153,7 +153,7 @@ const Map = () => {
         animate={true}
         easeLinearity={0.35}
       >
-        <TileLayer url="https://{s}.tile.osm.org/{z}/{x}/{y}.png" />
+        <TileLayer url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"  attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"/>
 
         {pins.map((institute, index) => (
           <Marker
