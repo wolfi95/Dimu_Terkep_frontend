@@ -66,7 +66,7 @@ export class Admin extends Component<{},IAdminPageState> {
                     </Button>
                 </div>
                 <br/>
-                <Button variant="outlined">
+                <Button variant="outlined" onClick={() => this.editIntezmeny("")}>
                         Új intézmény
                 </Button>
                 <TextField
