@@ -15,8 +15,8 @@ export class Admin extends Component<{},IAdminPageState> {
     /**
      *
      */
-    constructor() {
-        super({});
+    constructor(props:IAdminPageState) {
+        super(props);
         this.state = {
             Intezmenyek:[],
             searchParam: ""
