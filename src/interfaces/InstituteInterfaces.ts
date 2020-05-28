@@ -17,7 +17,7 @@ export interface IIntezmenyHeader {
   intezmenyId: string;
 }
 
-interface IIntezmenyVezeto {
+export interface IIntezmenyVezeto {
   nev: string;
   tol: number;
   ig: number;
