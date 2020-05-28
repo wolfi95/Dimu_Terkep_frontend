@@ -16,23 +16,22 @@ import {
   DialogContent,
   DialogActions,
 } from "@material-ui/core";
-import {
-  IIntezmeny,
-  IIntezmenyHelyszin,
-  IEsemeny,
-} from "./interfaces/InstituteInterfaces";
+import { IIntezmeny, IIntezmenyHelyszin, IEsemeny, IIntezmenyVezeto } from "./interfaces/InstituteInterfaces";
 import { appHistory } from ".";
 import instance from "./api/api";
 
 interface IEditPageState {
-  new: boolean;
-  openHelyszinDialog: boolean;
-  editingHelyszin: IIntezmenyHelyszin | null;
-  editableHelyszin: IIntezmenyHelyszin | null;
-  openEsemenyDialog: boolean;
-  editingEsemeny: IEsemeny | null;
-  editableEsemeny: IEsemeny | null;
-  intezmeny: IIntezmeny;
+    new: boolean;
+    intezmeny: IIntezmeny;
+    openHelyszinDialog: boolean;
+    editingHelyszin: IIntezmenyHelyszin | null;
+    editableHelyszin: IIntezmenyHelyszin | null;
+    openEsemenyDialog: boolean;
+    editingEsemeny: IEsemeny | null;
+    editableEsemeny: IEsemeny | null;
+    openVezetoDialog: boolean;
+    editableVezeto: IIntezmenyVezeto | null;
+    editingVezeto: IIntezmenyVezeto | null;
 }
 
 export class Edit extends Component<{}, IEditPageState> {
@@ -46,11 +45,14 @@ export class Edit extends Component<{}, IEditPageState> {
     );
     var id = appHistory.location.pathname.split("/").pop();
     this.state = {
-      new: id === "",
+      new: id === "",      
       openHelyszinDialog: false,
       editableHelyszin: null,
       editingHelyszin: null,
-      openEsemenyDialog: false,
+      openVezetoDialog: false,
+      editingVezeto: null,
+      editableVezeto: null,
+      openEsemenyDialog:false,
       editableEsemeny: null,
       editingEsemeny: null,
       intezmeny: {
@@ -181,6 +183,33 @@ export class Edit extends Component<{}, IEditPageState> {
         });
         break;
       }
+      case "editVezetoNev": {
+        this.setState({
+          editableVezeto: {
+            ...(this.state.editableVezeto as IIntezmenyVezeto),
+            nev: event.currentTarget.value,
+          },
+        });
+        break;
+      }
+      case "editVezetoTol": {
+        this.setState({
+          editableVezeto: {
+            ...(this.state.editableVezeto as IIntezmenyVezeto),
+            tol: +event.currentTarget.value,
+          },
+        });
+        break;
+      }
+      case "editVezetoIg": {
+        this.setState({
+          editableVezeto: {
+            ...(this.state.editableVezeto as IIntezmenyVezeto),
+            ig: +event.currentTarget.value,
+          },
+        });
+        break;
+      }
       case "editEsemenyNev": {
         this.setState({
           editableEsemeny: {
@@ -259,6 +288,19 @@ export class Edit extends Component<{}, IEditPageState> {
     });
   };
 
+  handleVezetoClose = (edit: boolean) => {
+    if (edit) {
+      var temp = this.state.intezmeny.intezmenyVezetok.filter(
+        (i) => i !== this.state.editableVezeto
+      );
+      temp.push(this.state.editableVezeto as IIntezmenyVezeto);
+      this.setState({
+        intezmeny: { ...this.state.intezmeny, intezmenyVezetok: temp },
+      });
+    }
+    this.setState({ openVezetoDialog: false, editingVezeto: null });
+  };
+
   deleteVezeto = (vezeto) => {
     var temp = this.state.intezmeny.intezmenyVezetok;
     temp = temp.filter((i) => i !== vezeto);
@@ -270,7 +312,26 @@ export class Edit extends Component<{}, IEditPageState> {
     });
   };
 
-  editIntezmenyVezeto = () => {};
+  editIntezmenyVezeto = (vezeto) => {
+    var vezetoTemp =
+      (vezeto as IIntezmenyVezeto) !== null
+        ? vezeto
+        : { nev: "", tol: 0, ig: 0 };
+    this.setState(
+      { openVezetoDialog: true, editableVezeto: vezetoTemp },
+      () => {
+        if (vezeto !== null)
+          this.setState({
+            editingVezeto: this.state.intezmeny.intezmenyVezetok.find(
+              (i) =>
+                i.nev === this.state.editableVezeto?.nev &&
+                i.tol === this.state.editableVezeto?.tol &&
+                i.ig === this.state.editableVezeto?.ig
+            ) as IIntezmenyVezeto,
+          });
+      }
+    );
+  };
 
   editEsemeny = (esemeny) => {
     var esemenytemp =
@@ -474,7 +535,9 @@ export class Edit extends Component<{}, IEditPageState> {
                         <TableCell>
                           <Button
                             className="editButton"
-                            onClick={() => this.editIntezmenyVezeto()}
+                            onClick={() =>
+                              this.editIntezmenyVezeto(intezmenyVezeto)
+                            }
                           >
                             &#9998;
                           </Button>
@@ -491,7 +554,7 @@ export class Edit extends Component<{}, IEditPageState> {
                 )}
               </TableBody>
             </Table>
-            <Button>&#10133; Hozzáad</Button>
+            <Button onClick={() => this.editIntezmenyVezeto(null)}>&#10133; Hozzáad</Button>
           </div>
 
           <div className="editGroup">
@@ -550,6 +613,67 @@ export class Edit extends Component<{}, IEditPageState> {
             </Button>
           </div>
         </form>
+
+        <Dialog
+          open={this.state.openVezetoDialog}
+          onClose={this.handleVezetoClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">
+            {this.state.editingVezeto !== null
+              ? "Intézményvezető módosítása"
+              : "Új intézményvezeto"}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Név"
+              type="text"
+              name="editVezetoNev"
+              fullWidth
+              value={this.state.editableVezeto?.nev}
+              onChange={this.handleChange}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Tól"
+              type="number"
+              name="editVezetoTol"
+              fullWidth
+              value={this.state.editableVezeto?.tol}
+              onChange={this.handleChange}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Ig"
+              type="number"
+              name="editVezetoIg"
+              fullWidth
+              value={this.state.editableVezeto?.ig}
+              onChange={this.handleChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => this.handleVezetoClose(true)}
+              color="primary"
+            >
+              {this.state.editingVezeto !== null ? "Módosítás" : "Felvesz"}
+            </Button>
+            <Button
+              onClick={() => this.handleVezetoClose(false)}
+              color="primary"
+            >
+              Mégse
+            </Button>
+          </DialogActions>
+        </Dialog>
 
         <Dialog
           open={this.state.openHelyszinDialog}
@@ -623,7 +747,7 @@ export class Edit extends Component<{}, IEditPageState> {
               onClick={() => this.handleHelyszinClose(true)}
               color="primary"
             >
-              {this.state.editingHelyszin !== null ? "Módosítás" : "Felvesz"}
+              {this.state.editingHelyszin !== null ? "Módosítása" : "Felvesz"}
             </Button>
             <Button
               onClick={() => this.handleHelyszinClose(false)}
@@ -633,6 +757,74 @@ export class Edit extends Component<{}, IEditPageState> {
             </Button>
           </DialogActions>
         </Dialog>
+        <Dialog open={this.state.openHelyszinDialog} onClose={this.handleHelyszinClose} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">{this.state.editingHelyszin !== null ? "Helyszín módosítása" : "Új helyszín"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Cím"
+            type="text"
+            name="editHelyszinCim"
+            fullWidth
+            value={this.state.editableHelyszin?.helyszin}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Nyitás"
+            type="number"
+            name="editHelyszinNyitas"
+            fullWidth
+            value={this.state.editableHelyszin?.nyitas}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Költözés"
+            type="number"
+            name="editHelyszinKoltozes"
+            fullWidth
+            value={this.state.editableHelyszin?.koltozes}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Latitude"
+            type="number"
+            name="editHelyszinLat"
+            fullWidth
+            value={this.state.editableHelyszin?.latitude}
+            onChange={this.handleChange}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Longitude"
+            type="number"
+            name="editHelyszinLong"
+            fullWidth
+            value={this.state.editableHelyszin?.longitude}
+            onChange={this.handleChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleHelyszinClose(true)} color="primary">
+            {this.state.editingHelyszin !== null ? "Módosítás" : "Felvesz"}
+          </Button>
+          <Button onClick={() => this.handleHelyszinClose(false)} color="primary">
+            Mégse
+          </Button>
+        </DialogActions>
+      </Dialog>
 
         <Dialog
           open={this.state.openEsemenyDialog}
