@@ -1,6 +1,6 @@
 import React, { Component, ChangeEvent } from "react";
-import instance from "./api/api";
-import { IIntezmenyHeader } from "./interfaces/InstituteInterfaces";
+import instance from "../../api/api";
+import { IIntezmenyHeader } from "../../interfaces/InstituteInterfaces";
 import {
   TextField,
   Table,
@@ -16,7 +16,7 @@ import {
   DialogContentText,
   DialogActions,
 } from "@material-ui/core";
-import { appHistory } from ".";
+import { appHistory } from "../../.";
 
 interface IDelteIntezmeny {
     intezmenyId: string;

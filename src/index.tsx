@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Map from "./Map";
+import Map from "./components/Map/Map";
 import { Route, Router, Redirect, Switch } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
-import Admin from "./Admin";
-import SignIn from "./Login";
-import Edit from "./Edit"
+import Admin from "./components/Admin/Admin";
+import SignIn from "./components/Admin/Login";
+import Edit from "./components/Admin/Edit"
 import { createBrowserHistory } from "history";
 
 export const appHistory = createBrowserHistory()

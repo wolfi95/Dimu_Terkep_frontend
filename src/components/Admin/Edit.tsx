@@ -16,9 +16,9 @@ import {
   DialogContent,
   DialogActions,
 } from "@material-ui/core";
-import { IIntezmeny, IIntezmenyHelyszin, IEsemeny, IIntezmenyVezeto } from "./interfaces/InstituteInterfaces";
-import { appHistory } from ".";
-import instance from "./api/api";
+import { IIntezmeny, IIntezmenyHelyszin, IEsemeny, IIntezmenyVezeto } from "../../interfaces/InstituteInterfaces";
+import { appHistory } from "../../.";
+import instance from "../../api/api";
 
 interface IEditPageState {
     new: boolean;
