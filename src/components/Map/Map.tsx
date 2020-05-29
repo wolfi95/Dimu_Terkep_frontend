@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import { Map as LeafletMap, TileLayer, Marker, Popup } from "react-leaflet";
-import axios from "./api/api";
+import axios from "../../api/api";
 import { useWhatChanged } from "@simbathesailor/use-what-changed";
 import LinkIcon from "@material-ui/icons/Link";
 import { Grid, Link, Divider, Button } from "@material-ui/core";
-import renderInstituteIcon from "./components/InstituteIcons";
-import "./App.css";
-import InstFilter from "./components/InstTypeFilters";
-import InstituteSearch from "./components/InstituteSearch";
-import Timeline from "./components/Timeline";
-import RequestFailedAlert from "./components/RequestFailedAlert";
-import { IIntezmeny } from "./interfaces/InstituteInterfaces";
-import { SearchType } from "./enums/enums";
+import renderInstituteIcon from "./InstituteIcons";
+import "../../assets/styles/App.css";
+import InstFilter from "./InstTypeFilters";
+import InstituteSearch from "./InstituteSearch";
+import Timeline from "./Timeline";
+import RequestFailedAlert from "./RequestFailedAlert";
+import { IIntezmeny } from "../../interfaces/InstituteInterfaces";
+import { SearchType } from "../../enums/enums";
 import { $enum } from "ts-enum-util";
-import { IPosition } from "./interfaces/PositionInterface";
-import ArtlasLogo from "./components/ArtlasLogo";
-import { appHistory } from "./index";
-import renderMarker from "./components/InstituteMarkers";
+import { IPosition } from "../../interfaces/PositionInterface";
+import ArtlasLogo from "./ArtlasLogo";
+import { appHistory } from "../../.";
+import renderMarker from "./InstituteMarkers";
 
 const Map = () => {
   const initInstTypes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];

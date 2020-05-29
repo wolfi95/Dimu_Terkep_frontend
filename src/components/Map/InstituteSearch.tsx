@@ -6,7 +6,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { Select } from "@material-ui/core";
-import { SearchType } from "../enums/enums";
+import { SearchType } from "../../enums/enums";
 import { $enum } from "ts-enum-util";
 
 const InstituteSearch = (props) => {
